@@ -1,0 +1,9 @@
+# ignore gradle 
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# ignore idea and builds
+.idea/
+build/
