@@ -47,28 +47,28 @@ public class Player {
 
     public void left() {
         xMoving = true;
-        if (Math.abs(xMovePt - x) == 1) // change for 1 pixel
+        if ((xMovePt - x)  == 2) // change for 1 pixel
             xMovePt -= 20;
         xVel = -speed;
     }
 
     public void right() {
         xMoving = true;
-        if (Math.abs(xMovePt - x) == 1) // change for 1 pixel
+        if ((xMovePt - x)  == 2) // change for 1 pixel
             xMovePt += 20;
         xVel = speed;
     }
 
     public void up() {
         yMoving = true;
-        if (Math.abs(yMovePt - y) == 1) // change for 1 pixel
+        if ((yMovePt - y) == 2) // change for 1 pixel
             yMovePt -= 20;
         yVel = -speed;
     }
 
     public void down() {
         yMoving = true;
-        if (Math.abs(yMovePt + y) == 1) // change for 1 pixel
+        if ((yMovePt + y)  == 2) // change for 1 pixel
             yMovePt += 20;
         yVel = speed;
     }
