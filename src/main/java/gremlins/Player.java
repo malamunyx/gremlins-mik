@@ -68,6 +68,11 @@ public class Player {
         if (yVel < 0 && app.mapTiles.containsKey(this.getHashIndex() - 36))
             yStop();
 
+        if (xVel != 0)
+            yMoving = false;
+        if (yVel != 0)
+            xMoving = false;
+
         if (x == tar_x && y == tar_y) {
             xVel = 0;
             yVel = 0;
@@ -86,27 +91,27 @@ public class Player {
     }
 
     public void left(App app) {
-        if (!app.mapTiles.containsKey(this.getHashIndex()-1) && (x % 20 == 0)) {
+        if (!app.mapTiles.containsKey(this.getHashIndex()-1) ) {
             xMoving = true;
             xDir = -1;
         }
     }
 
     public void right(App app) {
-        if (!app.mapTiles.containsKey(this.getHashIndex()+1) && (x % 20 == 0)) {
+        if (!app.mapTiles.containsKey(this.getHashIndex()+1) ) {
             xMoving = true;
             xDir = 1;
         }
     }
     public void up(App app) {
-        if (!app.mapTiles.containsKey(this.getHashIndex()-36) && (y % 20 == 0)) {
+        if (!app.mapTiles.containsKey(this.getHashIndex()-36) ) {
             yMoving = true;
             yDir = -1;
         }
     }
 
     public void down(App app) {
-        if (!app.mapTiles.containsKey(this.getHashIndex()+36) && (y % 20 == 0)) {
+        if (!app.mapTiles.containsKey(this.getHashIndex()+36) ) {
             yMoving = true;
             yDir = 1;
         }
