@@ -9,6 +9,7 @@ import processing.event.KeyEvent;
 import java.util.*; // Random, HashSet
 //import java.util.Random;
 import java.io.*;
+import java.util.regex.Pattern;
 
 
 public class App extends PApplet {
@@ -23,7 +24,7 @@ public class App extends PApplet {
     public static final Random randomGenerator = new Random();
 
     public String configPath;
-    
+
     public PImage brickwall;
     public PImage stonewall;
     public PImage wizard;
@@ -34,7 +35,7 @@ public class App extends PApplet {
      *  -> Delete from mapTile, free object (Destroy object, free memory).
      *  (ASK: does a removal from hashset clear mem?)
      */
-    private final HashSet<Tile> mapTiles = new HashSet<>();
+    public final HashMap<Integer, Tile> mapTiles = new HashMap<>();
 
     private Player p;
 
@@ -44,14 +45,14 @@ public class App extends PApplet {
 
     /**
      * Initialise the setting of the window size.
-    */
+     */
     public void settings() {
         size(WIDTH, HEIGHT);
     }
 
     /**
      * Load all resources such as images. Initialise the elements such as the player, enemies and map elements.
-    */
+     */
     public void setup() {
         frameRate(FPS);
 
@@ -73,22 +74,22 @@ public class App extends PApplet {
 
     /**
      * Receive key pressed signal from the keyboard.
-    */
+     */
     public void keyPressed(KeyEvent e){
         int key = e.getKeyCode();
         if (key == 37)
-            p.left();
+            p.left(this);
         else if (key == 38)
-            p.up();
+            p.up(this);
         else if (key == 39)
-            p.right();
+            p.right(this);
         else if (key == 40)
-            p.down();
+            p.down(this);
     }
-    
+
     /**
      * Receive key released signal from the keyboard.
-    */
+     */
     public void keyReleased(KeyEvent e){
         int key = e.getKeyCode();
         if (key == 37 || key == 39)
@@ -99,13 +100,14 @@ public class App extends PApplet {
 
 
     /**
-     * Draw all elements in the game by current frame. 
-	 */
+     * Draw all elements in the game by current frame.
+     */
     public void draw() {
         background(211); // clears the screen each frame
-        for (Tile t : mapTiles) {
+        for (Integer n : mapTiles.keySet()) {
 //            if (t instanceof Exit) {// If it is a door.
 //                // image for door.
+            Tile t = mapTiles.get(n);
             if (t instanceof Wall) {
                 if ( ((Wall) t).isBreakable() )
                     image(brickwall, t.x, t.y);
@@ -114,7 +116,7 @@ public class App extends PApplet {
             }
         }
 
-        p.draw(this);
+        p.draw(wizard,this);
     }
 
     /*
@@ -129,11 +131,14 @@ public class App extends PApplet {
         }
 
         try {
+            Pattern splitter = Pattern.compile("");
             Scanner sc = new Scanner(f);
 
             int posY = 0; // y-pixel variable
+            int idx = 0;
             while (sc.hasNextLine()) {
-                String[] tileRow = sc.nextLine().split("");
+
+                String[] tileRow = splitter.split(sc.nextLine());
 
                 if (tileRow.length > 36 || posY > 33 * 20) {
                     System.err.println("Invalid file format");
@@ -143,25 +148,29 @@ public class App extends PApplet {
                 for (int i = 0; i < tileRow.length; ++i) {
                     switch (tileRow[i]) {
                         case "X": // Stone wall
-                            mapTiles.add(new Wall(i*20, posY, false));
+//                            Wall t = new Wall(i*20, posY*20, false);
+                            mapTiles.put(idx, new Wall(i*20, posY*20, false));
                             break;
                         case "B": // brick wall
-                            mapTiles.add(new Wall(i*20, posY, true));
+                            //Wall a = new Wall(i*20, posY*20, true);
+                            mapTiles.put(idx, new Wall(i*20, posY*20, true));
                             break;
                         case "E": // Exit door
                             //
                             break;
                         case "W": // Start/Wizard (maybe return positions);
-                            p = new Player(wizard, i*20, posY);
+                            p = new Player(i*20, posY*20);
                             break;
                         case " ":
                             break;
                     }
+                    ++idx;
                 }
 
-                posY += 20;
+                posY += 1;
             }
             sc.close();
+            splitter = null;
         } catch (FileNotFoundException e) {
             System.err.println("No file found");
             System.exit(1);
