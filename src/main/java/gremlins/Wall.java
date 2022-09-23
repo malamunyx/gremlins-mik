@@ -1,15 +1,20 @@
 package gremlins;
 
-public class Wall extends Tile {
-    // Determines whether stonewall or brickwall will be shown.
-    private final boolean isBreakable;
+public class Wall extends Tile{
+    private boolean breakable;
+    private boolean broken;
 
-    public Wall(int x, int y, boolean isBreakable) {
+    public Wall(int x, int y, boolean breakable) {
         super(x, y);
-        this.isBreakable = isBreakable;
+        this.breakable = breakable;
+        this.broken = false;
     }
 
-    public boolean isBreakable() {
-        return this.isBreakable;
+    public boolean canBreak() {
+        return this.breakable;
+    }
+
+    public boolean isBroken() {
+        return this.broken;
     }
 }
