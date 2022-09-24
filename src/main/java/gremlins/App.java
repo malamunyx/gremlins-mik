@@ -139,7 +139,7 @@ public class App extends PApplet {
         File currentLevel = new File(Levels.getJSONObject(level).getString("layout"));
         double wz_cd = Levels.getJSONObject(level).getDouble("wizard_cooldown");
         double en_cd = Levels.getJSONObject(level).getDouble("enemy_cooldown");
-        
+
         return new Game(currentLevel, wz_cd, en_cd);
     }
 
