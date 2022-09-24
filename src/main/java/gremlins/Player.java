@@ -2,10 +2,10 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Player {
-    Game currentGame;
-    private int x;
-    private int y;
+public class Player implements Sprite { // make player extend Tile??????
+    private final Game currentGame;
+    private int xPx;
+    private int yPx;
 
     private int xVel;
     private int yVel;
@@ -18,45 +18,42 @@ public class Player {
     private int xDir = 0;
     private int yDir = 0;
 
+    private int imgDir;
+
 
 
     private static final int speed = 2;
 
-    public Player(int x, int y, Game g) {
+    public Player(int xPx, int yPx, Game g) {
         this.currentGame = g;
-        this.x = x;
-        this.y = y;
-        this.tar_x = x;
-        this.tar_y = y;
+        this.xPx = xPx;
+        this.yPx = yPx;
+        this.tar_x = xPx;
+        this.tar_y = yPx;
         this.xVel = 0;
         this.yVel = 0;
+        this.imgDir = 1;
     }
 
-//    public int getPosHashIdx(int x, int y) {
-//        return (x / 20) + 36 * (y / 20);
-//    }
-//    public int getHashIdx() {
-//        return (this.x / 20) + 36 * (this.y / 20);
-//    }
     public void draw(App a, Game g, PImage img) {
-        a.image(img, x, y);
+        a.image(img, xPx, yPx);
 
         // can we move? i.e. it's in a square.
         // check for collisions, especially if tile is door etc.
         // Ideally valid for stationary
-        if (xVel > 0 && currentGame.getTile(getIndex(x,y)+1) instanceof Wall)
+        if (xVel > 0 && currentGame.getTile(getIndex(xPx, yPx)+1) instanceof Wall)
             xStop();
 
-        if (xVel < 0 && currentGame.getTile(getIndex(x,y)-1) instanceof Wall)
+        if (xVel < 0 && currentGame.getTile(getIndex(xPx, yPx)-1) instanceof Wall)
             xStop();
 
-        if (yVel > 0 && currentGame.getTile(getIndex(x,y)+36) instanceof Wall)
+        if (yVel > 0 && currentGame.getTile(getIndex(xPx, yPx)+36) instanceof Wall)
             yStop();
 
-        if (yVel < 0 && currentGame.getTile(getIndex(x,y)-36) instanceof Wall)
+        if (yVel < 0 && currentGame.getTile(getIndex(xPx, yPx)-36) instanceof Wall)
             yStop();
 
-        if (x == tar_x && y == tar_y) {
+        if (xPx == tar_x && yPx == tar_y) {
             xVel = 0;
             yVel = 0;
             if (xDir != 0) {
@@ -67,51 +64,68 @@ public class Player {
                 yVel = yDir * speed;
             }
         } else { // move towards target
-            x += xVel;
-            y += yVel;
+            xPx += xVel;
+            yPx += yVel;
         }
     }
 
     public void left() {
-        if (!(currentGame.getTile(getIndex(tar_x, tar_y) - 1) instanceof Wall)) {
+        imgDir = 0;
+        if (canMove(getIndex(tar_x, tar_y) - 1)) {
+            yStop();
             xDir = -1;
         }
     }
 
     public void right() {
-        if (!(currentGame.getTile(getIndex(tar_x, tar_y) + 1) instanceof Wall)) {
+        imgDir = 1;
+        if (canMove(getIndex(tar_x, tar_y) + 1)) {
+            yStop();
             xDir = 1;
         }
     }
 
     public void up() {
-        if (!(currentGame.getTile(getIndex(tar_x, tar_y) - 36) instanceof Wall)) {
+        imgDir = 2;
+        if (canMove(getIndex(tar_x, tar_y) - 36)) {
+            xStop();
             yDir = -1;
         }
     }
 
     public void down() {
-        if (!(currentGame.getTile(getIndex(tar_x, tar_y) + 36) instanceof Wall)) {
+        imgDir = 3;
+        if (canMove(getIndex(tar_x, tar_y) + 36)) {
+            xStop();
             yDir = 1;
         }
     }
 
-
     public void xStop() {
-        //xMoving = false;
         xDir = 0;
     }
 
     public void yStop() {
-        //yMoving = false;
         yDir = 0;
     }
 
-    public int getIndex(int x, int y) {
-        return (x / 20) + 36 * (y / 20);
+    public int getIndex(int xPx, int yPx) {
+        return (xPx / 20) + 36 * (yPx / 20);
     }
 
-//    public boolean lose() {
-//        return xCell == 1 && yCell == 1;
-//    }
+    public boolean canMove(int index) {
+        if (currentGame.getTile(index) instanceof Wall) {
+            return ((Wall) currentGame.getTile(index)).isBroken();
+        } else {
+            return true;
+        }
+    }
+
+    public int getImgDir() {
+        return this.imgDir;
+    }
+
+    public boolean pWinLevel() {
+        return currentGame.getTile(getIndex(xPx, yPx)) instanceof Exit;
+    }
 }
