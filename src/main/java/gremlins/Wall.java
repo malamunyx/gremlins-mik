@@ -17,4 +17,9 @@ public class Wall extends Tile{
     public boolean isBroken() {
         return this.broken;
     }
+
+    public void breakWall() {
+        if (breakable)
+            this.broken = true;
+    }
 }
