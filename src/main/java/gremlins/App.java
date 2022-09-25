@@ -100,6 +100,7 @@ public class App extends PApplet {
         }
         if (keyCode == 32) {
             // call player shoot.
+            background(255,0,0);
         }
 
     }

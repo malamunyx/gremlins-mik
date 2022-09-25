@@ -5,14 +5,14 @@ import processing.core.PImage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Gremlin implements Sprite{
     private final int xOrigin; // ORIGIN, xPx and yPx returns to this, dir ='\0' everytime player loses.
     private final int yOrigin;
     private static final int speed = 1;
-    private final Random rg = new Random(); // rg for random generator
+    //private final Random rg = new Random(); // rg for random generator
 
     private final Game currentGame;
     private int xPx;
@@ -96,7 +96,8 @@ public class Gremlin implements Sprite{
             else if (dir == 'D')
                 choices.remove(getDirInList(choices, 'U'));
         }
-        return choices.get(rg.nextInt(choices.size()));
+        //return choices.get(rg.nextInt(choices.size()));
+        return choices.get(currentGame.getRandomInt(choices.size()));
     }
 
     private int up() { // returns for target y.
@@ -138,4 +139,8 @@ public class Gremlin implements Sprite{
         }
         throw new RuntimeException("Invalid char");
     }
+
+//    private int randomGenerator(int n) {
+//        return (int)(Math.random()*n);
+//    }
 }

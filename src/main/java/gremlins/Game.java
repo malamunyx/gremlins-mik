@@ -3,11 +3,13 @@ package gremlins;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
 public class Game {
+    private Random rg = new Random();
     private Tile[][] tileMap;
     private double wizard_cooldown;
     private double gremlin_cooldown;
@@ -73,15 +75,6 @@ public class Game {
         int j = index % 36;
         return tileMap[i][j];
     }
-
-//    public void UpdateTile(int i, int j, int iNew, int jNew) {
-//
-//    }
-
-
-
-
-
 
     /**
      * Reads text file input, returning a 2D tileMap array.
@@ -151,5 +144,9 @@ public class Game {
         } else {
             return true;
         }
+    }
+
+    public int getRandomInt(int n) {
+        return (rg.nextInt(n));
     }
 }
