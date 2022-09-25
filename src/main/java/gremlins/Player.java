@@ -2,8 +2,9 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Player implements Sprite { // make player extend Tile??????
+public class Player implements Sprite {
     private final Game currentGame;
+    private static final int speed = 2;
     private int xPx;
     private int yPx;
 
@@ -20,9 +21,6 @@ public class Player implements Sprite { // make player extend Tile??????
 
     private int imgDir;
 
-
-
-    private static final int speed = 2;
 
     public Player(int xPx, int yPx, Game g) {
         this.currentGame = g;
