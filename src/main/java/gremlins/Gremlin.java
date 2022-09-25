@@ -96,7 +96,6 @@ public class Gremlin implements Sprite{
             else if (dir == 'D')
                 choices.remove(getDirInList(choices, 'U'));
         }
-        //return choices.get(rg.nextInt(choices.size()));
         return choices.get(currentGame.getRandomInt(choices.size()));
     }
 
@@ -139,8 +138,4 @@ public class Gremlin implements Sprite{
         }
         throw new RuntimeException("Invalid char");
     }
-
-//    private int randomGenerator(int n) {
-//        return (int)(Math.random()*n);
-//    }
 }
