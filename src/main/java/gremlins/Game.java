@@ -13,7 +13,7 @@ public class Game {
     private double gremlin_cooldown;
     private Player p;
 
-    public ArrayList<Sprite> sprites = new ArrayList<>();
+    public ArrayList<Gremlin> sprites = new ArrayList<>();
 
     public Game(File f, double wizard_cooldown, double gremlin_cooldown) {
         tileMap = loadMap(f);
@@ -37,6 +37,10 @@ public class Game {
             }
         }
 
+        for (Gremlin g : sprites) {
+            g.update(a, a.gremlin);
+            // CHECK FOR COLLISIONS WITH PLAYERS, FIREBALLS ETC. SPRITES.
+        }
         p.draw(a, this, a.wizard[p.getImgDir()]);
 
         if (p.pWinLevel()) {
@@ -105,12 +109,13 @@ public class Game {
                         case "W":
                             p = new Player( j*20, i*20, this);
 //                            mt[i][j] = p; if we want to make Player extend tile...
-                            sprites.add(p); // every frame, check if each sprite interacts with eachother.
+                            //sprites.add(p); // every frame, check if each sprite interacts with eachother.
                             break;
                         case "E":
                             mt[i][j] = new Exit(j, i);
                             break;
                         case "G":
+                            sprites.add(new Gremlin(j*20, i*20, this));
                             break;
                         case " ":
                             break;
@@ -138,5 +143,13 @@ public class Game {
         into false. Player position is set again back to its original, alongside
         gremlin locations.
          */
+    }
+
+    public boolean checkWall(int idx) {
+        if (getTile(idx) instanceof Wall) {
+            return ((Wall) getTile(idx)).isBroken();
+        } else {
+            return true;
+        }
     }
 }
