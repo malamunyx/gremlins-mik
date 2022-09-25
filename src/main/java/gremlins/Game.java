@@ -147,6 +147,6 @@ public class Game {
     }
 
     public int getRandomInt(int n) {
-        return (rg.nextInt(n));
+        return rg.nextInt(n);
     }
 }
