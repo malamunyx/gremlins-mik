@@ -2,36 +2,34 @@ package gremlins;
 
 import processing.core.PImage;
 
-import java.util.Iterator;
-
-public class Fireball implements Sprite {
+public class Slime implements Sprite {
     private final Game currentGame;
     private static final int speed = 4;
     int xPx;
     int yPx;
     int xVel;
     int yVel;
-    int imgDir;
+    char dir;
     boolean canRemove;
 
 
-    public Fireball(int xPx, int yPx, int imgDir, Game g) {
+    public Slime (int xPx, int yPx, char dir, Game g) {
         this.currentGame = g;
         this.xPx = xPx;
         this.yPx = yPx;
 
-        this.imgDir = imgDir;
-        switch (imgDir) {
-            case 0:
+        this.dir = dir;
+        switch (dir) {
+            case 'L':
                 xVel = -speed;
                 break;
-            case 1:
+            case 'R':
                 xVel = speed;
                 break;
-            case 2:
+            case 'U':
                 yVel = -speed;
                 break;
-            case 3:
+            case 'D':
                 yVel = speed;
         }
     }
@@ -55,7 +53,7 @@ public class Fireball implements Sprite {
     }
 
     public boolean intersects(Sprite s) {
-        if (s instanceof Gremlin || s instanceof Slime) { //|| s instanceof slime
+        if (s instanceof Player || s instanceof Fireball) {
             int xDist = Math.abs(s.getCentreX() - this.getCentreX());
             int yDist = Math.abs(s.getCentreY() - this.getCentreY());
             return (xDist < 10 && yDist < 10);
@@ -67,7 +65,6 @@ public class Fireball implements Sprite {
     public void stop() {
         xVel = 0;
         yVel = 0;
-        canRemove = true;
     }
 
     public int getCentreX() {
@@ -80,5 +77,6 @@ public class Fireball implements Sprite {
 
     public void reset(Game g) {
         stop();
+        canRemove = true;
     }
 }

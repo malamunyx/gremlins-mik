@@ -6,7 +6,9 @@ public class Player implements Sprite {
     private final Game currentGame;
     private static final int speed = 2;
     private int xPx;
+    private int xOrigin;
     private int yPx;
+    private int yOrigin;
 
     private int xVel;
     private int yVel;
@@ -26,6 +28,8 @@ public class Player implements Sprite {
         this.currentGame = g;
         this.xPx = xPx;
         this.yPx = yPx;
+        this.xOrigin = xPx;
+        this.yOrigin = yPx;
         this.tar_x = xPx;
         this.tar_y = yPx;
         this.xVel = 0;
@@ -112,11 +116,6 @@ public class Player implements Sprite {
     }
 
     public boolean canMove(int index) {
-//        if (currentGame.getTile(index) instanceof Wall) {
-//            return ((Wall) currentGame.getTile(index)).isBroken();
-//        } else {
-//            return true;
-//        }
         return currentGame.checkWall(index);
     }
 
@@ -128,7 +127,44 @@ public class Player implements Sprite {
         return this.imgDir;
     }
 
+    public boolean intersects(Sprite s) {
+        // might want to change this to AABB collision
+        if (s instanceof Gremlin || s instanceof Slime) { //|| s instanceof slime
+            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
+            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
+            return (xDist < 10 && yDist < 10);
+        } else {
+            return false;
+        }
+    }
+
+    public void stop() {
+        xVel = 0;
+        yVel = 0;
+    }
+
+    public int getCentreX() {
+        return this.xPx + xOffset;
+    }
+
+    public int getCentreY() {
+        return this.yPx + yOffset;
+    }
+
     public boolean pWinLevel() {
         return currentGame.getTile(getIndex(xPx, yPx)) instanceof Exit;
+    }
+
+    public void reset(Game g) {
+        xStop();
+        yStop();
+        xPx = xOrigin;
+        yPx = yOrigin;
+        xVel = 0;
+        yVel = 0;
+        tar_x = xPx;
+        tar_y = yPx;
+        this.imgDir = 1;
+        // call game Reset;
     }
 }

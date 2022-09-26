@@ -15,14 +15,15 @@ public class Gremlin implements Sprite{
     //private final Random rg = new Random(); // rg for random generator
 
     private final Game currentGame;
-    private int xPx;
-    private int yPx;
+    protected int xPx;
+    protected int yPx;
     private int tar_x;
     private int tar_y;
     char dir;
 
     private int xVel;
     private int yVel;
+    private boolean stop = true;
 
     public Gremlin(int xPx, int yPx, Game g) {
         this.currentGame = g;
@@ -40,11 +41,19 @@ public class Gremlin implements Sprite{
         a.text(dir, xPx, yPx);
         a.fill(0, 10, 10);
 
+        if (!currentGame.checkWall(getIndex(xPx, yPx) + getDirNum())) {
+            stop = true;
+        }
+
         // Get Random dir.
         if (xPx == tar_x && yPx == tar_y) {
             xVel = 0;
             yVel = 0;
-            dir = getRandomDir();
+
+            if (stop) {
+                dir = getRandomDir();
+                stop = !stop;
+            }
 
             if (dir == 'U') {
                 tar_y = up();
@@ -101,33 +110,25 @@ public class Gremlin implements Sprite{
 
     private int up() { // returns for target y.
         int n = getIndex(xPx, yPx);
-        while (currentGame.checkWall(n-36)) {
-            n-= 36;
-        }
+        n -= 36;
         return (n / 36)*20;
     }
 
     private int down() { // returns for target y.
         int n = getIndex(xPx, yPx);
-        while (currentGame.checkWall(n+36)) {
-            n+= 36;
-        }
+        n += 36;
         return (n / 36)*20;
     }
 
     private int left() { // returns for target x.
         int n = getIndex(xPx, yPx);
-        while (currentGame.checkWall(n-1)) {
-            n-= 1;
-        }
+        n -= 1;
         return (n % 36)*20;
     }
 
     private int right() { // returns for target x.
         int n = getIndex(xPx, yPx);
-        while (currentGame.checkWall(n+1)) {
-            n+= 1;
-        }
+        n += 1;
         return (n % 36)*20;
     }
 
@@ -137,5 +138,56 @@ public class Gremlin implements Sprite{
                     return i;
         }
         throw new RuntimeException("Invalid char");
+    }
+
+    public int getDirNum() {
+        // Ideally valid for stationary
+        if (dir == 'L')
+            return -1;
+        else if (dir == 'R')
+            return 1;
+        else if (dir == 'U')
+            return -36;
+        else if (dir == 'D')
+            return 36;
+        else
+            return 0;
+    }
+
+    public boolean intersects(Sprite s) {
+        if (s instanceof Fireball || s instanceof Player) { //|| s instanceof slime
+            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
+            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
+            return (xDist < 10 && yDist < 10);
+        } else {
+            return false;
+        }
+    }
+
+    public void stop() {
+        xVel = 0;
+        yVel = 0;
+        stop = true;
+    }
+
+    public void reset(Game g) {
+        xPx = xOrigin;
+        yPx = yOrigin;
+        tar_x = xOrigin;
+        tar_y = yOrigin;
+        dir = '\0';
+        stop();
+    }
+
+    public int getCentreX() {
+        return this.xPx + xOffset;
+    }
+
+    public int getCentreY() {
+        return this.yPx + yOffset;
+    }
+
+    public void fire() {
+        currentGame.addSprite(new Slime(this.xPx, this.yPx, dir, currentGame));
     }
 }

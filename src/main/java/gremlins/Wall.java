@@ -19,11 +19,10 @@ public class Wall extends Tile{
     @Override
     public void draw(App a, PImage img, int x, int y) {
         a.image(img, x*20, y*20);
-        if (broken && timer > 0) {
+        if (broken && timer >= 0) {
             if (timer-- % 4 == 0) {
                 incrementStatus();
             }
-//            --timer;
         }
     }
 

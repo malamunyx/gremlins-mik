@@ -39,22 +39,7 @@ public class Game {
             }
         }
 
-//        for (Sprite s : sprites) {
-//            if (s instanceof Gremlin) {
-//                ((Gremlin) s).update(a, a.gremlin);
-//            } else if (s instanceof Fireball) {
-//                ((Fireball) s).update(a, a.fireball);
-//            }
-//
-//            // CHECK FOR COLLISIONS WITH PLAYERS, FIREBALLS ETC. SPRITES.
-//        }
         updateSprites(a);
-
-//        for (Projectile p : projectiles) {
-//            if (p instanceof  Fireball) {
-//                ((Fireball) p).update(a, a.fireball);
-//            }
-//        }
 
         p.update(a, a.wizard[p.getImgDir()]);
 
@@ -114,6 +99,7 @@ public class Game {
                             break;
                         case "W":
                             p = new Player( j*20, i*20, this);
+                            sprites.add(p);
 //                            mt[i][j] = p; if we want to make Player extend tile...
                             //sprites.add(p); // every frame, check if each sprite interacts with eachother.
                             break;
@@ -151,19 +137,11 @@ public class Game {
          */
     }
 
-    public boolean checkWall(int idx) {
+    public boolean checkWall(int idx) { // checks if the wall/Tile is broken;
         if (getTile(idx) instanceof Wall) {
             return ((Wall) getTile(idx)).isBroken();
         } else {
             return true;
-        }
-    }
-
-    public boolean checkBrickWall(int idx) {
-        if (getTile(idx) instanceof Wall) {
-            return ((Wall) getTile(idx)).canBreak();
-        } else {
-            return false;
         }
     }
 
@@ -177,17 +155,47 @@ public class Game {
 
     public void updateSprites(App a) {
         for (int i = sprites.size()-1; i >= 0; --i) {
-            Sprite s = sprites.get(i);
-            if (s instanceof Fireball) {
-                if (((Fireball) s).collided()) {
-                    ((Wall)getTile(((Fireball) s).getIndex())).incrementStatus();
-                    ((Wall)getTile(((Fireball) s).getIndex())).breakWall();
+            Sprite s1 = sprites.get(i);
+
+            if (s1 instanceof Gremlin) {
+                ((Gremlin) s1).update(a, a.gremlin);
+                if (a.frameCount % (gremlin_cooldown * 60) == 0)
+                    ((Gremlin) s1).fire();
+            } else if (s1 instanceof Fireball) {
+                ((Fireball) s1).update(a, a.fireball);
+                Fireball fb = (Fireball) s1;
+                if (fb.checkWallCollision()) {
+                    ((Wall) getTile(fb.getIndex())).breakWall();
                     sprites.remove(i);
+                    continue;
                 }
-                ((Fireball) s).update(a, a.fireball);
-            } else if (s instanceof Gremlin) {
-                ((Gremlin) s).update(a, a.gremlin);
+            } else if (s1 instanceof Slime) {
+                Slime sl = (Slime) s1;
+                sl.update(a, a.slime);
+                if (sl.checkWallCollision()) {
+                    sprites.remove(i);
+                    continue;
+                }
+            }
+
+            for (int j = sprites.size()-1; j >= 0; --j) {
+                    Sprite s2 = sprites.get(j);
+                    if (i != j && s1.intersects(s2)) {
+                        s1.reset(this);
+                        s2.reset(this);
+                    }
+                }
+
+        }
+
+        for (int i = sprites.size()-1; i >= 0; --i) {
+            Sprite s = sprites.get(i);
+            if (s instanceof Fireball && ((Fireball) s).canRemove) {
+                sprites.remove(i);
+            } else if (s instanceof Slime && ((Slime) s).canRemove) {
+                sprites.remove(i);
             }
         }
     }
+
 }
