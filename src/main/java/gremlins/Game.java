@@ -28,9 +28,10 @@ public class Game {
         for (Tile[] ta : tileMap) {
             for (Tile t : ta) {
                 if (t instanceof Wall) {
-                    if ( ((Wall) t).canBreak() ) {
-                        t.draw(a, a.brickwall[0], t.x, t.y);
-                    } else {
+                    // If Brickwall and its in original state. (-1 state is destroyed/no draw).
+                    if ( ((Wall) t).canBreak() && ((Wall) t).getStatus() != -1) {
+                        t.draw(a, a.brickwall[((Wall) t).getStatus()], t.x, t.y);
+                    } else if (!((Wall) t).canBreak()) {
                         t.draw(a, a.stonewall, t.x, t.y);
                     }
                 } else if (t instanceof Exit) {
