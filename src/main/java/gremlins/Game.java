@@ -39,15 +39,16 @@ public class Game {
             }
         }
 
-        for (Sprite s : sprites) {
-            if (s instanceof Gremlin) {
-                ((Gremlin) s).update(a, a.gremlin);
-            } else if (s instanceof Fireball) {
-                ((Fireball) s).update(a, a.fireball);
-            }
-
-            // CHECK FOR COLLISIONS WITH PLAYERS, FIREBALLS ETC. SPRITES.
-        }
+//        for (Sprite s : sprites) {
+//            if (s instanceof Gremlin) {
+//                ((Gremlin) s).update(a, a.gremlin);
+//            } else if (s instanceof Fireball) {
+//                ((Fireball) s).update(a, a.fireball);
+//            }
+//
+//            // CHECK FOR COLLISIONS WITH PLAYERS, FIREBALLS ETC. SPRITES.
+//        }
+        updateSprites(a);
 
 //        for (Projectile p : projectiles) {
 //            if (p instanceof  Fireball) {
@@ -170,11 +171,23 @@ public class Game {
         sprites.add(p);
     }
 
-    public void removeSprite(Sprite s) {
-        sprites.remove(s);
-    }
-
     public int getRandomInt(int n) {
         return rg.nextInt(n);
+    }
+
+    public void updateSprites(App a) {
+        for (int i = sprites.size()-1; i >= 0; --i) {
+            Sprite s = sprites.get(i);
+            if (s instanceof Fireball) {
+                if (((Fireball) s).collided()) {
+                    ((Wall)getTile(((Fireball) s).getIndex())).incrementStatus();
+                    ((Wall)getTile(((Fireball) s).getIndex())).breakWall();
+                    sprites.remove(i);
+                }
+                ((Fireball) s).update(a, a.fireball);
+            } else if (s instanceof Gremlin) {
+                ((Gremlin) s).update(a, a.gremlin);
+            }
+        }
     }
 }

@@ -39,16 +39,16 @@ public class Player implements Sprite {
         // can we move? i.e. it's in a square.
         // check for collisions, especially if tile is door etc.
         // Ideally valid for stationary
-        if (xVel > 0 && currentGame.getTile(getIndex(xPx, yPx)+1) instanceof Wall)
+        if (xVel > 0 && !currentGame.checkWall(getIndex(xPx, yPx)+1))
             xStop();
 
-        if (xVel < 0 && currentGame.getTile(getIndex(xPx, yPx)-1) instanceof Wall)
+        if (xVel < 0 && !currentGame.checkWall(getIndex(xPx, yPx)-1))
             xStop();
 
-        if (yVel > 0 && currentGame.getTile(getIndex(xPx, yPx)+36) instanceof Wall)
+        if (yVel > 0 && !currentGame.checkWall(getIndex(xPx, yPx)+36))
             yStop();
 
-        if (yVel < 0 && currentGame.getTile(getIndex(xPx, yPx)-36) instanceof Wall)
+        if (yVel < 0 && !currentGame.checkWall(getIndex(xPx, yPx)-36))
             yStop();
 
         if (xPx == tar_x && yPx == tar_y) {
@@ -112,15 +112,16 @@ public class Player implements Sprite {
     }
 
     public boolean canMove(int index) {
-        if (currentGame.getTile(index) instanceof Wall) {
-            return ((Wall) currentGame.getTile(index)).isBroken();
-        } else {
-            return true;
-        }
+//        if (currentGame.getTile(index) instanceof Wall) {
+//            return ((Wall) currentGame.getTile(index)).isBroken();
+//        } else {
+//            return true;
+//        }
+        return currentGame.checkWall(index);
     }
 
     public void fire() {
-        currentGame.addSprite(new Fireball(this.xPx, this.yPx, imgDir));
+        currentGame.addSprite(new Fireball(this.xPx, this.yPx, imgDir, currentGame));
     }
 
     public int getImgDir() {
