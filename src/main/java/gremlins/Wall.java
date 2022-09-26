@@ -26,10 +26,15 @@ public class Wall extends Tile{
     }
 
     public void incrementStatus() {
-        ++this.status;
+        if (status < 5)
+            ++this.status;
     }
 
     public int getStatus() {
         return this.status;
+    }
+
+    public int getIndex() {
+        return x + y*36;
     }
 }
