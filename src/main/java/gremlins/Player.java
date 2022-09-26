@@ -33,7 +33,7 @@ public class Player implements Sprite {
         this.imgDir = 1;
     }
 
-    public void draw(App a, Game g, PImage img) {
+    public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
 
         // can we move? i.e. it's in a square.
@@ -117,6 +117,10 @@ public class Player implements Sprite {
         } else {
             return true;
         }
+    }
+
+    public void fire() {
+        currentGame.addSprite(new Fireball(this.xPx, this.yPx, imgDir));
     }
 
     public int getImgDir() {

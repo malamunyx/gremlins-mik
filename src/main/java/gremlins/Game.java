@@ -1,10 +1,9 @@
 package gremlins;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -15,7 +14,7 @@ public class Game {
     private double gremlin_cooldown;
     private Player p;
 
-    public ArrayList<Gremlin> sprites = new ArrayList<>();
+    public ArrayList<Sprite> sprites = new ArrayList<>();
 
     public Game(File f, double wizard_cooldown, double gremlin_cooldown) {
         tileMap = loadMap(f);
@@ -28,8 +27,8 @@ public class Game {
         for (Tile[] ta : tileMap) {
             for (Tile t : ta) {
                 if (t instanceof Wall) {
-                    // If Brickwall and its in original state. (-1 state is destroyed/no draw).
-                    if ( ((Wall) t).canBreak() && ((Wall) t).getStatus() != -1) {
+                    // If Brickwall and its in original state. (5 state is destroyed/no draw).
+                    if ( ((Wall) t).canBreak() && ((Wall) t).getStatus() != 5) {
                         t.draw(a, a.brickwall[((Wall) t).getStatus()], t.x, t.y);
                     } else if (!((Wall) t).canBreak()) {
                         t.draw(a, a.stonewall, t.x, t.y);
@@ -40,11 +39,23 @@ public class Game {
             }
         }
 
-        for (Gremlin g : sprites) {
-            g.update(a, a.gremlin);
+        for (Sprite s : sprites) {
+            if (s instanceof Gremlin) {
+                ((Gremlin) s).update(a, a.gremlin);
+            } else if (s instanceof Fireball) {
+                ((Fireball) s).update(a, a.fireball);
+            }
+
             // CHECK FOR COLLISIONS WITH PLAYERS, FIREBALLS ETC. SPRITES.
         }
-        p.draw(a, this, a.wizard[p.getImgDir()]);
+
+//        for (Projectile p : projectiles) {
+//            if (p instanceof  Fireball) {
+//                ((Fireball) p).update(a, a.fireball);
+//            }
+//        }
+
+        p.update(a, a.wizard[p.getImgDir()]);
 
         if (p.pWinLevel()) {
             a.noLoop();
@@ -145,6 +156,22 @@ public class Game {
         } else {
             return true;
         }
+    }
+
+    public boolean checkBrickWall(int idx) {
+        if (getTile(idx) instanceof Wall) {
+            return ((Wall) getTile(idx)).canBreak();
+        } else {
+            return false;
+        }
+    }
+
+    public void addSprite(Sprite p) {
+        sprites.add(p);
+    }
+
+    public void removeSprite(Sprite s) {
+        sprites.remove(s);
     }
 
     public int getRandomInt(int n) {
