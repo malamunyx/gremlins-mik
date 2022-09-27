@@ -2,14 +2,16 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Wall extends Tile{
+public class Wall extends Tile {
     private boolean breakable;
     private boolean broken;
     private int status;
     private int timer;
 
-    public Wall(int x, int y, boolean breakable) {
-        super(x, y);
+
+
+    public Wall(int xPx, int yPx, boolean breakable) {
+        super(xPx, yPx);
         this.breakable = breakable;
         this.broken = false;
         this.status = 0;
@@ -17,11 +19,12 @@ public class Wall extends Tile{
     }
 
     @Override
-    public void draw(App a, PImage img, int x, int y) {
-        a.image(img, x*20, y*20);
+    public void draw(App a, PImage img) {
+        a.image(img, xPx, yPx);
+
         if (broken && timer >= 0) {
             if (timer-- % 4 == 0) {
-                incrementStatus();
+                ++status;
             }
         }
     }
@@ -36,19 +39,10 @@ public class Wall extends Tile{
 
     public void breakWall() {
         if (breakable)
-            this.broken = true;
-    }
-
-    public void incrementStatus() {
-        if (status < 5)
-            ++this.status;
+            broken = true;
     }
 
     public int getStatus() {
         return this.status;
-    }
-
-    public int getIndex() {
-        return x + y*36;
     }
 }

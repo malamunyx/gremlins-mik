@@ -3,26 +3,21 @@ package gremlins;
 import processing.core.PImage;
 
 public class Player implements Sprite {
-    private final Game currentGame;
     private static final int speed = 2;
+    private Game currentGame;
     private int xPx;
-    private int xOrigin;
     private int yPx;
+    private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
     private int yOrigin;
-
-    private int xVel;
-    private int yVel;
-
-    //private boolean xMoving = false; // is xMoving and yMoving irrelevant???
-    //private boolean yMoving = false; // xDir and yDir does the same for all xDir and yDir != 0;
 
     private int tar_x;
     private int tar_y;
     private int xDir = 0;
     private int yDir = 0;
+    private int xVel = 0;
+    private int yVel = 0;
 
-    private int imgDir;
-
+    private char dir = 'L';
 
     public Player(int xPx, int yPx, Game g) {
         this.currentGame = g;
@@ -32,47 +27,69 @@ public class Player implements Sprite {
         this.yOrigin = yPx;
         this.tar_x = xPx;
         this.tar_y = yPx;
-        this.xVel = 0;
-        this.yVel = 0;
-        this.imgDir = 1;
     }
 
+    @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
 
-        // can we move? i.e. it's in a square.
-        // check for collisions, especially if tile is door etc.
-        // Ideally valid for stationary
-        if (xVel > 0 && !currentGame.checkWall(getIndex(xPx, yPx)+1))
+        // Wall collisions
+        if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
             xStop();
-
-        if (xVel < 0 && !currentGame.checkWall(getIndex(xPx, yPx)-1))
+        if (xVel > 0 && !canMove(getIndex(xPx, yPx) + 1))
             xStop();
-
-        if (yVel > 0 && !currentGame.checkWall(getIndex(xPx, yPx)+36))
+        if (yVel < 0 && !canMove(getIndex(xPx, yPx) - 36))
             yStop();
-
-        if (yVel < 0 && !currentGame.checkWall(getIndex(xPx, yPx)-36))
+        if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36))
             yStop();
 
         if (xPx == tar_x && yPx == tar_y) {
+            // Stop on square
             xVel = 0;
             yVel = 0;
             if (xDir != 0) {
-                tar_x += xDir * 20;
-                xVel = xDir * speed;
+                tar_x += xDir * App.SPRITESIZE;
+                xVel += xDir * speed;
             } else if (yDir != 0) {
-                tar_y += yDir * 20;
-                yVel = yDir * speed;
+                tar_y += yDir * App.SPRITESIZE;
+                yVel += yDir * speed;
             }
-        } else { // move towards target
+        } else {
+            // Move towards target.
             xPx += xVel;
             yPx += yVel;
         }
     }
 
+    @Override
+    public boolean spriteCollision(Sprite s) {
+        if (s instanceof Gremlin || s instanceof Slime) {
+            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
+            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
+            return (xDist < 20 && yDist < 20);
+        } else {
+            return false;
+        }
+    }
+
+//    @Override getdirnum might just be an abstract class.....
+    public int getDirNum() throws Error {
+        switch (dir) {
+            case 'L':
+                return 0;
+            case 'R':
+                return 1;
+            case 'U':
+                return 2;
+            case 'D':
+                return 3;
+            default:
+                throw new Error(String.format("Direction %c is not a valid direction", dir));
+        }
+    }
+
     public void left() {
-        imgDir = 0;
+        dir = 'L';
         if (canMove(getIndex(tar_x, tar_y) - 1)) {
             yStop();
             xDir = -1;
@@ -80,7 +97,7 @@ public class Player implements Sprite {
     }
 
     public void right() {
-        imgDir = 1;
+        dir = 'R';
         if (canMove(getIndex(tar_x, tar_y) + 1)) {
             yStop();
             xDir = 1;
@@ -88,7 +105,7 @@ public class Player implements Sprite {
     }
 
     public void up() {
-        imgDir = 2;
+        dir = 'U';
         if (canMove(getIndex(tar_x, tar_y) - 36)) {
             xStop();
             yDir = -1;
@@ -96,7 +113,7 @@ public class Player implements Sprite {
     }
 
     public void down() {
-        imgDir = 3;
+        dir = 'D';
         if (canMove(getIndex(tar_x, tar_y) + 36)) {
             xStop();
             yDir = 1;
@@ -111,60 +128,36 @@ public class Player implements Sprite {
         yDir = 0;
     }
 
-    public int getIndex(int xPx, int yPx) {
-        return (xPx / 20) + 36 * (yPx / 20);
-    }
-
-    public boolean canMove(int index) {
-        return currentGame.checkWall(index);
-    }
-
     public void fire() {
-        currentGame.addSprite(new Fireball(this.xPx, this.yPx, imgDir, currentGame));
+        currentGame.addSprite(Sprite.fireballFactory(xPx, yPx, dir, currentGame));
     }
 
-    public int getImgDir() {
-        return this.imgDir;
+    public boolean canMove(int idx) {
+        return currentGame.canWalk(idx);
     }
 
-    public boolean intersects(Sprite s) {
-        // might want to change this to AABB collision
-        if (s instanceof Gremlin || s instanceof Slime) { //|| s instanceof slime
-            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
-            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
-            return (xDist < 10 && yDist < 10);
-        } else {
-            return false;
-        }
+    @Override
+    public int getIndex(int x, int y) {
+        return (x / 20) + (y / 20) * 36;
     }
 
-    public void stop() {
-        xVel = 0;
-        yVel = 0;
+    @Override
+    public void reset() {
+        this.xPx = xOrigin;
+        this.yPx = yOrigin;
+        this.tar_x = xPx;
+        this.tar_y = yPx;
+        xStop();
+        yStop();
     }
 
+    @Override
     public int getCentreX() {
         return this.xPx + xOffset;
     }
 
+    @Override
     public int getCentreY() {
         return this.yPx + yOffset;
-    }
-
-    public boolean pWinLevel() {
-        return currentGame.getTile(getIndex(xPx, yPx)) instanceof Exit;
-    }
-
-    public void reset(Game g) {
-        xStop();
-        yStop();
-        xPx = xOrigin;
-        yPx = yOrigin;
-        xVel = 0;
-        yVel = 0;
-        tar_x = xPx;
-        tar_y = yPx;
-        this.imgDir = 1;
-        // call game Reset;
     }
 }

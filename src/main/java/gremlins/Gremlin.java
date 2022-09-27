@@ -3,98 +3,140 @@ package gremlins;
 import processing.core.PImage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-
-public class Gremlin implements Sprite{
-    private final int xOrigin; // ORIGIN, xPx and yPx returns to this, dir ='\0' everytime player loses.
-    private final int yOrigin;
+public class Gremlin implements Sprite {
     private static final int speed = 1;
-    //private final Random rg = new Random(); // rg for random generator
+    private Game currentGame;
+    private int xPx;
+    private int yPx;
+    private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
+    private int yOrigin;
 
-    private final Game currentGame;
-    protected int xPx;
-    protected int yPx;
     private int tar_x;
     private int tar_y;
-    char dir;
+    private int xDir = 0;
+    private int yDir = 0;
+    private int xVel = 0;
+    private int yVel = 0;
 
-    private int xVel;
-    private int yVel;
-    private boolean stop = true;
+    private char dir = '\0';
+    private boolean stopped = true;
 
     public Gremlin(int xPx, int yPx, Game g) {
         this.currentGame = g;
+        this.xPx = xPx;
+        this.yPx = yPx;
         this.xOrigin = xPx;
         this.yOrigin = yPx;
-        this.xPx =xPx;
-        this.yPx = yPx;
         this.tar_x = xPx;
         this.tar_y = yPx;
-        this.dir = '\0'; // at the start, null char
     }
 
+    public void fire() {
+        currentGame.addSprite(Sprite.slimeFactory(xPx, yPx, dir, currentGame));
+    }
+
+    @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
         a.text(dir, xPx, yPx);
         a.fill(0, 10, 10);
 
-        if (!currentGame.checkWall(getIndex(xPx, yPx) + getDirNum())) {
-            stop = true;
-        }
 
-        // Get Random dir.
+        if (!stopped && !currentGame.canWalk(getIndex(xPx, yPx) + getDirNum()))
+            stopped = true;
+
         if (xPx == tar_x && yPx == tar_y) {
             xVel = 0;
             yVel = 0;
 
-            if (stop) {
+            if (stopped) {
                 dir = getRandomDir();
-                stop = !stop;
+                stopped = !stopped;
             }
 
             if (dir == 'U') {
-                tar_y = up();
-                yVel = -1;
+                yVel = -1 * speed;
+                tar_y += yVel * App.SPRITESIZE;
             } else if (dir == 'D') {
-                tar_y = down();
-                yVel = 1;
+                yVel = 1 * speed;
+                tar_y += yVel * App.SPRITESIZE;
             } else if (dir == 'L') {
-                tar_x = left();
-                xVel = -1;
+                xVel = -1 * speed;
+                tar_x += xVel * App.SPRITESIZE;
             } else if (dir == 'R') {
-                tar_x = right();
-                xVel = 1;
+                xVel = 1 * speed;
+                tar_x += xVel * App.SPRITESIZE;
             }
-
         } else {
-            xPx += xVel * speed;
-            yPx += yVel * speed;
+            xPx += xVel;
+            yPx += yVel;
+        }
+
+    }
+
+    @Override
+    public boolean spriteCollision(Sprite s) {
+        if (s instanceof Player || s instanceof Fireball) {
+            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
+            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
+            return (xDist < App.SPRITESIZE && yDist < App.SPRITESIZE);
+        } else {
+            return false;
         }
     }
 
-    public int getIndex(int xPx, int yPx) {
-        return (xPx / 20) + 36 * (yPx / 20);
+//    @Override
+    public int getDirNum() {
+        if (dir == 'L')
+            return -1;
+        else if (dir == 'R')
+            return 1;
+        else if (dir == 'U')
+            return -36;
+        else if (dir == 'D')
+            return 36;
+        else
+            return 0;
     }
 
-    private Character getRandomDir() { // Create Char[] {'L', 'R', 'U', 'D"}
+
+    public void stop() {
+        xVel = 0;
+        yVel = 0;
+    }
+
+    public boolean canMove(int idx) {
+        return currentGame.canWalk(idx);
+    }
+
+    @Override
+    public int getIndex(int x, int y) {
+        return (x / 20) + (y / 20) * 36;
+    }
+
+    @Override
+    public void reset() {
+        this.dir = '\0';
+        this.xPx = xOrigin;
+        this.yPx = yOrigin;
+        this.tar_x = xPx;
+        this.tar_y = yPx;
+        stopped = true;
+    }
+
+    private Character getRandomDir() {
         ArrayList<Character> choices = new ArrayList<>();
-        if (currentGame.checkWall(getIndex(xPx, yPx) - 1)) {
+        if (currentGame.canWalk(getIndex(xPx, yPx) - 1))
             choices.add('L');
-        }
-        if (currentGame.checkWall(getIndex(xPx, yPx) + 1)) {
+        if (currentGame.canWalk(getIndex(xPx, yPx) + 1))
             choices.add('R');
-        }
-        if (currentGame.checkWall(getIndex(xPx, yPx) - 36)) {
+        if (currentGame.canWalk(getIndex(xPx, yPx) - 36))
             choices.add('U');
-        }
-        if (currentGame.checkWall(getIndex(xPx, yPx) + 36)) {
+        if (currentGame.canWalk(getIndex(xPx, yPx) + 36))
             choices.add('D');
-        }
 
-        // If it is not surrounded by walls. remove opposite direction.
+        // If it is not surrounded by walls, remove opposite direction
         if (choices.size() > 1) {
             if (dir == 'L')
                 choices.remove(getDirInList(choices, 'R'));
@@ -108,86 +150,21 @@ public class Gremlin implements Sprite{
         return choices.get(currentGame.getRandomInt(choices.size()));
     }
 
-    private int up() { // returns for target y.
-        int n = getIndex(xPx, yPx);
-        n -= 36;
-        return (n / 36)*20;
-    }
-
-    private int down() { // returns for target y.
-        int n = getIndex(xPx, yPx);
-        n += 36;
-        return (n / 36)*20;
-    }
-
-    private int left() { // returns for target x.
-        int n = getIndex(xPx, yPx);
-        n -= 1;
-        return (n % 36)*20;
-    }
-
-    private int right() { // returns for target x.
-        int n = getIndex(xPx, yPx);
-        n += 1;
-        return (n % 36)*20;
-    }
-
-    private int getDirInList(ArrayList<Character> dirArray, Character c) throws RuntimeException {
-        for (int i = 0; i < dirArray.size(); ++i) {
-            if (dirArray.get(i).equals(c))
-                    return i;
-        }
-        throw new RuntimeException("Invalid char");
-    }
-
-    public int getDirNum() {
-        // Ideally valid for stationary
-        if (dir == 'L')
-            return -1;
-        else if (dir == 'R')
-            return 1;
-        else if (dir == 'U')
-            return -36;
-        else if (dir == 'D')
-            return 36;
-        else
-            return 0;
-    }
-
-    public boolean intersects(Sprite s) {
-        if (s instanceof Fireball || s instanceof Player) { //|| s instanceof slime
-            int xDist = Math.abs(s.getCentreX() - this.getCentreX());
-            int yDist = Math.abs(s.getCentreY() - this.getCentreY());
-            return (xDist < 10 && yDist < 10);
-        } else {
-            return false;
-        }
-    }
-
-    public void stop() {
-        xVel = 0;
-        yVel = 0;
-        stop = true;
-    }
-
-    public void reset(Game g) {
-        xPx = xOrigin;
-        yPx = yOrigin;
-        tar_x = xOrigin;
-        tar_y = yOrigin;
-        dir = '\0';
-        stop();
-    }
-
+    @Override
     public int getCentreX() {
         return this.xPx + xOffset;
     }
 
+    @Override
     public int getCentreY() {
         return this.yPx + yOffset;
     }
 
-    public void fire() {
-        currentGame.addSprite(new Slime(this.xPx, this.yPx, dir, currentGame));
+    private int getDirInList(ArrayList<Character> dirArray, Character c) throws Error {
+        for (int i = 0; i < dirArray.size(); ++i) {
+            if (dirArray.get(i).equals(c))
+                return i;
+        }
+        throw new Error("Invalid char in CharacterArray");
     }
 }

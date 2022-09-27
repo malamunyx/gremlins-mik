@@ -1,201 +1,169 @@
 package gremlins;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
-import java.util.regex.Pattern;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
     private Random rg = new Random();
-    private Tile[][] tileMap;
-    private double wizard_cooldown;
-    private double gremlin_cooldown;
-    private Player p;
+    double wizardCooldown;
+    double enemyCooldown;
+    private Player player;
 
-    public ArrayList<Sprite> sprites = new ArrayList<>();
+    private HashMap<Integer, Tile> tileMap = new HashMap<>();
+    private ArrayList<Sprite> sprites = new ArrayList<>();
 
-    public Game(File f, double wizard_cooldown, double gremlin_cooldown) {
-        tileMap = loadMap(f);
-        this.wizard_cooldown = wizard_cooldown;
-        this.gremlin_cooldown = gremlin_cooldown;
+    public static Game generateGame(File currentLevel, double wizardCooldown, double enemyCooldown) {
+        return new Game(currentLevel, wizardCooldown, enemyCooldown);
     }
 
-    public void draw(App a) { // Map: 36x33
+    public Game(File currentLevel, double wizardCooldown, double enemyCooldown) {
+        loadMap(currentLevel);
+        this.wizardCooldown = wizardCooldown;
+        this.enemyCooldown = enemyCooldown;
+    }
+
+    public void draw(App a) {
         a.background(211);
-        for (Tile[] ta : tileMap) {
-            for (Tile t : ta) {
-                if (t instanceof Wall) {
-                    // If Brickwall and its in original state. (5 state is destroyed/no draw).
-                    if ( ((Wall) t).canBreak() && ((Wall) t).getStatus() != 5) {
-                        t.draw(a, a.brickwall[((Wall) t).getStatus()], t.x, t.y);
-                    } else if (!((Wall) t).canBreak()) {
-                        t.draw(a, a.stonewall, t.x, t.y);
-                    }
-                } else if (t instanceof Exit) {
-                    t.draw(a, a.door, t.x, t.y);
-                }
+
+        // draw map -> turn into own method?
+        for (Tile t : tileMap.values()) {
+            if (t instanceof Wall) {
+                if (((Wall) t).canBreak() && ((Wall) t).getStatus() != 5)
+                    t.draw(a, a.brickwall[((Wall) t).getStatus()]);
+                else if (!((Wall) t).canBreak())
+                    t.draw(a, a.stonewall);
+            } else if (t instanceof Exit) {
+                t.draw(a, a.door);
             }
         }
-
         updateSprites(a);
 
-        p.update(a, a.wizard[p.getImgDir()]);
-
-        if (p.pWinLevel()) {
+        if (playerWin()) {
             a.noLoop();
-            a.background(0, 255, 0); // change this later.
+            a.background(0, 255, 0);
         }
 
     }
 
+    public Tile getTile(int idx) {
+        return this.tileMap.get(idx);
+    }
+
+    /**
+     * Determines if location is accessible by sprites
+     * @param idx hash index of tile location
+     * @return boolean value representing tile accessibility
+     */
+    public boolean canWalk(int idx) {
+        if (getTile(idx) instanceof Wall)
+            return (((Wall) getTile(idx)).isBroken());
+        else
+            return true;
+    }
 
     public Player getPlayer() {
-        return this.p;
+        return this.player;
     }
 
-    /**
-     * Returns tileMap.
-     * @return 2-dimensional tile array.
-     */
-    public Tile[][] getTileMap() {
-        return this.tileMap;
-    }
-
-    /**
-     * Returns tile object of a specific index in tileMap.
-     * @param index Grid number reference: index = xPos + (yPos * gridWidth)
-     * @return Tile object.
-     */
-    public Tile getTile(int index) {
-        int i = index / 36;
-        int j = index % 36;
-        return tileMap[i][j];
-    }
-
-    /**
-     * Reads text file input, returning a 2D tileMap array.
-     * @param f Text file input.
-     * @return 2D array of tile objects.
-     */
-    private Tile[][] loadMap(File f) {
-        Tile[][] mt = new Tile[33][36];
-        try {
-            Scanner sc = new Scanner(f);
-            Pattern splitter = Pattern.compile("");
-
-            int i = 0;
-            while (sc.hasNextLine()) {
-                String[] in = splitter.split(sc.nextLine());
-
-                for (int j = 0; j < in.length; ++j) {
-                    switch (in[j]) {
-                        case "X":
-                            mt[i][j] = new Wall(j, i, false);
-                            break;
-                        case "B":
-                            mt[i][j] = new Wall(j, i, true);
-                            break;
-                        case "W":
-                            p = new Player( j*20, i*20, this);
-                            sprites.add(p);
-//                            mt[i][j] = p; if we want to make Player extend tile...
-                            //sprites.add(p); // every frame, check if each sprite interacts with eachother.
-                            break;
-                        case "E":
-                            mt[i][j] = new Exit(j, i);
-                            break;
-                        case "G":
-                            sprites.add(new Gremlin(j*20, i*20, this));
-                            break;
-                        case " ":
-                            break;
-                        default:
-                            System.err.println("Invalid tile entry in text file " + i + " " + j);
-                    }
-                }
-                ++i;
-            }
-
-            sc.close();
-            splitter = null;
-
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found");
-            e.printStackTrace();
-            System.exit(1);
-        }
-        return mt;
-    }
-
-    private void reload(File f) {
-        /*
-        Iterates through each tile and resets its "broken" boolean status
-        into false. Player position is set again back to its original, alongside
-        gremlin locations.
-         */
-    }
-
-    public boolean checkWall(int idx) { // checks if the wall/Tile is broken;
-        if (getTile(idx) instanceof Wall) {
-            return ((Wall) getTile(idx)).isBroken();
-        } else {
-            return true;
-        }
-    }
-
-    public void addSprite(Sprite p) {
-        sprites.add(p);
+    public void addSprite(Sprite s) {
+        sprites.add(s);
     }
 
     public int getRandomInt(int n) {
         return rg.nextInt(n);
     }
 
-    public void updateSprites(App a) {
+    private void updateSprites(App a) {
+        // Draw or update sprites.
         for (int i = sprites.size()-1; i >= 0; --i) {
             Sprite s1 = sprites.get(i);
 
             if (s1 instanceof Gremlin) {
-                ((Gremlin) s1).update(a, a.gremlin);
-                if (a.frameCount % (gremlin_cooldown * 60) == 0)
+                s1.update(a, a.gremlin);
+                if (a.frameCount % (enemyCooldown * 60) == 0)
                     ((Gremlin) s1).fire();
-            } else if (s1 instanceof Fireball) {
-                ((Fireball) s1).update(a, a.fireball);
-                Fireball fb = (Fireball) s1;
-                if (fb.checkWallCollision()) {
-                    ((Wall) getTile(fb.getIndex())).breakWall();
-                    sprites.remove(i);
-                    continue;
-                }
-            } else if (s1 instanceof Slime) {
-                Slime sl = (Slime) s1;
-                sl.update(a, a.slime);
-                if (sl.checkWallCollision()) {
-                    sprites.remove(i);
-                    continue;
-                }
             }
-
-            for (int j = sprites.size()-1; j >= 0; --j) {
-                    Sprite s2 = sprites.get(j);
-                    if (i != j && s1.intersects(s2)) {
-                        s1.reset(this);
-                        s2.reset(this);
-                    }
-                }
-
+            else if (s1 instanceof Player)
+                s1.update(a, a.wizard[player.getDirNum()]);
+            else if (s1 instanceof Fireball)
+                s1.update(a, a.fireball);
+            else if (s1 instanceof Slime) {
+                s1.update(a, a.slime);
+            }
         }
 
+        // check collisions
         for (int i = sprites.size()-1; i >= 0; --i) {
-            Sprite s = sprites.get(i);
-            if (s instanceof Fireball && ((Fireball) s).canRemove) {
-                sprites.remove(i);
-            } else if (s instanceof Slime && ((Slime) s).canRemove) {
-                sprites.remove(i);
+            Sprite s1 = sprites.get(i);
+
+            for (int j = sprites.size()-1; j >= 0; --j) {
+                Sprite s2 = sprites.get(j);
+                if (i != j && s1.spriteCollision(s2)) {
+                    s1.reset();
+                    s2.reset();
+                }
+            }
+        }
+
+        // check for sprites to delete (neutralised projectiles)
+        for (int i = sprites.size()-1; i >= 0; --i) {
+            Sprite s1 = sprites.get(i);
+            if (s1 instanceof Projectile) {
+                if (((Projectile) s1).isNeutralised())
+                    sprites.remove(i);
             }
         }
     }
 
+    public boolean playerWin() {
+        return getTile(player.getIndex(player.getCentreX(), player.getCentreY())) instanceof Exit;
+    }
+
+    private void loadMap(File levelFile) {
+        try {
+            Scanner sc = new Scanner(levelFile);
+
+            int hashIdx = 0;
+            int i = 0;
+            while (sc.hasNextLine()) {
+                String s = sc.nextLine();
+
+                for (int j = 0; j < s.length(); ++j) {
+                    switch (s.charAt(j)) {
+                        case 'X':
+                            tileMap.put(hashIdx, Tile.stoneWallFactory(j*20, i*20));
+                            break;
+                        case 'B':
+                            tileMap.put(hashIdx, Tile.brickWallFactory(j*20, i*20));
+                            break;
+                        case 'W':
+                            player = Sprite.playerFactory(j*20, i*20, this);
+                            addSprite(player);
+                            break;
+                        case 'E':
+                            tileMap.put(hashIdx, Tile.exitTileFactory(j*20, i*20));
+                            break;
+                        case 'G':
+                           addSprite(Sprite.gremlinFactory(j*20, i*20, this));
+                            break;
+                        case ' ':
+                            break;
+                        default:
+                            System.err.printf("Invalid tile %c in textfile. [%d][%d]", s.charAt(j), i, j);
+                    }
+                    ++hashIdx;
+                }
+                ++i;
+            }
+            sc.close();
+        } catch (FileNotFoundException e) {
+            System.err.printf("File %s not found%n", levelFile.getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 }
