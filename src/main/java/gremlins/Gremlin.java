@@ -5,11 +5,12 @@ import processing.core.PImage;
 import java.util.ArrayList;
 
 public class Gremlin implements Sprite {
+    // must revamp gremlin movement
     private static final int speed = 1;
     private Game currentGame;
     private int xPx;
     private int yPx;
-    private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
+    private int xOrigin;
     private int yOrigin;
 
     private int tar_x;
@@ -86,7 +87,7 @@ public class Gremlin implements Sprite {
         }
     }
 
-//    @Override
+    //    @Override maybe part of livenentity class?
     public int getDirNum() {
         if (dir == 'L')
             return -1;
@@ -99,7 +100,6 @@ public class Gremlin implements Sprite {
         else
             return 0;
     }
-
 
     public void stop() {
         xVel = 0;
@@ -117,12 +117,31 @@ public class Gremlin implements Sprite {
 
     @Override
     public void reset() {
+        int sIdx;
+        do {
+            sIdx = currentGame.getRandomInt(33 * 36);
+            xPx = (sIdx % 36) * 20;
+            yPx = (sIdx / 36) * 20;
+        } while (!currentGame.canWalk(sIdx) || !greaterTenRadius(currentGame.getPlayer()));
+
         this.dir = '\0';
-        this.xPx = xOrigin;
-        this.yPx = yOrigin;
+        stopped = true;
+        this.xVel = 0;
+        this.yVel = 0;
         this.tar_x = xPx;
         this.tar_y = yPx;
-        stopped = true;
+    }
+
+    public void levelReset() {
+        reset();
+        this.xPx = xOrigin;
+        this.yPx = yOrigin;
+    }
+
+    public boolean greaterTenRadius(Player p) {
+        int xTileDist = Math.abs(p.getCentreX() - this.getCentreX()) / App.SPRITESIZE;
+        int yTileDist = Math.abs(p.getCentreY() - this.getCentreY()) / App.SPRITESIZE;
+        return (xTileDist > 10 || yTileDist > 10);
     }
 
     private Character getRandomDir() {
