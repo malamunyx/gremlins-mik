@@ -4,18 +4,15 @@ import processing.core.PImage;
 
 public class Wall extends Tile {
     private boolean breakable;
-    private boolean broken;
-    private int status;
-    private int timer;
+    private boolean broken = false;
+    private int status = 0;
+    private int timer = 16;
 
 
 
     public Wall(int xPx, int yPx, boolean breakable) {
         super(xPx, yPx);
         this.breakable = breakable;
-        this.broken = false;
-        this.status = 0;
-        this.timer = 16;
     }
 
     @Override
@@ -40,6 +37,14 @@ public class Wall extends Tile {
     public void breakWall() {
         if (breakable)
             broken = true;
+    }
+
+    public void unbreakWall() {
+        if (broken) {
+            broken = false;
+            status = 0;
+            timer = 16;
+        }
     }
 
     public int getStatus() {

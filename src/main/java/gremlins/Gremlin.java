@@ -10,7 +10,7 @@ public class Gremlin implements Sprite {
     private Game currentGame;
     private int xPx;
     private int yPx;
-    private int xOrigin;
+    private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
     private int yOrigin;
 
     private int tar_x;
@@ -133,9 +133,15 @@ public class Gremlin implements Sprite {
     }
 
     public void levelReset() {
-        reset();
+        this.dir = '\0';
+        stopped = true;
         this.xPx = xOrigin;
         this.yPx = yOrigin;
+        this.xVel = 0;
+        this.yVel = 0;
+        this.tar_x = xPx;
+        this.tar_y = yPx;
+
     }
 
     public boolean greaterTenRadius(Player p) {

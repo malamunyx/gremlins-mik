@@ -59,7 +59,7 @@ public class Game {
      * @return boolean value representing tile accessibility
      */
     public boolean canWalk(int idx) {
-        if (getTile(idx) instanceof Wall)
+        if (tileMap.containsKey(idx) && getTile(idx) instanceof Wall)
             return (((Wall) getTile(idx)).isBroken());
         else
             return true;
@@ -103,8 +103,14 @@ public class Game {
             for (int j = sprites.size()-1; j >= 0; --j) {
                 Sprite s2 = sprites.get(j);
                 if (i != j && s1.spriteCollision(s2)) {
-                    s1.reset();
-                    s2.reset();
+                    if (s1 instanceof Player || s2 instanceof Player) {
+                        // calls levelReset.
+                        resetLevel();
+                    } else {
+                        s1.reset();
+                        s2.reset();
+                    }
+
                 }
             }
         }
@@ -165,5 +171,21 @@ public class Game {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public void resetLevel() {
+        for (Tile t : tileMap.values()) {
+            if (t instanceof Wall && ((Wall) t).isBroken()) {
+                ((Wall) t).unbreakWall();
+            }
+        }
+        for (Sprite s : sprites) { // neutralises Projectiles and
+            if (s instanceof Gremlin)
+                ((Gremlin) s).levelReset();
+            else
+                s.reset();
+        }
+
+
     }
 }
