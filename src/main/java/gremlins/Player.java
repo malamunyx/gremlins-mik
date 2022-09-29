@@ -5,6 +5,7 @@ import processing.core.PImage;
 public class Player implements Sprite {
     private static final int speed = 2;
     private Game currentGame;
+    private int charge;
     private int xPx;
     private int yPx;
     private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
@@ -27,11 +28,18 @@ public class Player implements Sprite {
         this.yOrigin = yPx;
         this.tar_x = xPx;
         this.tar_y = yPx;
+        this.charge = g.wizardCooldown;
     }
 
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
+        a.text(charge, xPx, yPx);
+        a.rect(600, 680, ((float)charge / currentGame.wizardCooldown)*100, 5);
+
+        // RECHARGE COOLDOWN
+        if (charge < currentGame.wizardCooldown)
+            ++charge;
 
         // Wall collisions
         if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
@@ -129,7 +137,10 @@ public class Player implements Sprite {
     }
 
     public void fire() {
-        currentGame.addSprite(Sprite.fireballFactory(xPx, yPx, dir, currentGame));
+        if (charge == currentGame.wizardCooldown) {
+            currentGame.addSprite(Sprite.fireballFactory(xPx, yPx, dir, currentGame));
+            charge = 0;
+        }
     }
 
     public boolean canMove(int idx) {
