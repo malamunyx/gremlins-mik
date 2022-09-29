@@ -29,7 +29,9 @@ public class App extends PApplet {
     public PImage fireball;
     public PImage door;
 
+    private int lives;
     private int level;
+    private int maxLevel;
     private Game currentGame;
     private Player currentPlayer;
 
@@ -72,9 +74,22 @@ public class App extends PApplet {
         this.fireball = loadImage(this.getClass().getResource("fireball.png").getPath().replace("%20", ""));
 
         // Always start at first level, hence first index of JSONArray.
+        gameSetup();
+    }
+
+    public void playerDeath() {
+        --lives;
+    }
+
+    private void gameSetup() { // maybe turn into one big readJSON method.....
+        File config = new File(configPath);
+
         level = 0;
+        maxLevel = getMaxLevel(config);
+        lives = loadLives(config);
         currentGame = loadGame(level);
-        currentPlayer = getCurrentPlayer(currentGame);
+        currentPlayer = currentGame.getPlayer();
+
 
     }
 
@@ -114,8 +129,31 @@ public class App extends PApplet {
      */
     @Override
     public void draw() {
-        currentGame.draw(this);
-        text(frameRate, 5, 15);
+        if (lives > 0) {
+            currentGame.draw(this);
+            text(frameRate, 5, 15);
+            textSize(12);
+
+            for (int i = 0; i < lives; ++i) {
+                image(wizard[0], 50 + i * 25, 680);
+            }
+
+            if (currentGame.playerWin()) {
+                if (++level < maxLevel) {
+                    currentGame = loadGame(level);
+                    currentPlayer = currentGame.getPlayer();
+                } else {
+                    noLoop();
+                    background(0, 255, 0);
+                }
+            }
+
+
+
+        } else {
+            noLoop();
+            background(255, 0, 0);
+        }
     }
 
     private Game loadGame(int level) {
@@ -136,6 +174,15 @@ public class App extends PApplet {
     }
 
 
+    private int loadLives(File f) {
+        JSONObject conf = loadJSONObject(new File(this.configPath));
+        return conf.getInt("lives");
+    }
+    private int getMaxLevel(File f) {
+        JSONObject conf = loadJSONObject(new File(this.configPath));
+        JSONArray levels = conf.getJSONArray("levels");
+        return levels.size();
+    }
 
     public static void main(String[] args) {
         PApplet.main("gremlins.App");
