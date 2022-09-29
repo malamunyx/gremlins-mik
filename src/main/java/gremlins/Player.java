@@ -11,8 +11,8 @@ public class Player implements Sprite {
     private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
     private int yOrigin;
 
-    private int tar_x;
-    private int tar_y;
+    private int xTarget;
+    private int yTarget;
     private int xDir = 0;
     private int yDir = 0;
     private int xVel = 0;
@@ -26,8 +26,8 @@ public class Player implements Sprite {
         this.yPx = yPx;
         this.xOrigin = xPx;
         this.yOrigin = yPx;
-        this.tar_x = xPx;
-        this.tar_y = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
         this.charge = g.wizardCooldown;
     }
 
@@ -51,15 +51,15 @@ public class Player implements Sprite {
         if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36))
             yStop();
 
-        if (xPx == tar_x && yPx == tar_y) {
+        if (xPx == xTarget && yPx == yTarget) {
             // Stop on square
             xVel = 0;
             yVel = 0;
             if (xDir != 0) {
-                tar_x += xDir * App.SPRITESIZE;
+                xTarget += xDir * App.SPRITESIZE;
                 xVel += xDir * speed;
             } else if (yDir != 0) {
-                tar_y += yDir * App.SPRITESIZE;
+                yTarget += yDir * App.SPRITESIZE;
                 yVel += yDir * speed;
             }
         } else {
@@ -98,7 +98,7 @@ public class Player implements Sprite {
 
     public void left() {
         dir = 'L';
-        if (canMove(getIndex(tar_x, tar_y) - 1)) {
+        if (canMove(getIndex(xTarget, yTarget) - 1)) {
             yStop();
             xDir = -1;
         }
@@ -106,7 +106,7 @@ public class Player implements Sprite {
 
     public void right() {
         dir = 'R';
-        if (canMove(getIndex(tar_x, tar_y) + 1)) {
+        if (canMove(getIndex(xTarget, yTarget) + 1)) {
             yStop();
             xDir = 1;
         }
@@ -114,7 +114,7 @@ public class Player implements Sprite {
 
     public void up() {
         dir = 'U';
-        if (canMove(getIndex(tar_x, tar_y) - 36)) {
+        if (canMove(getIndex(xTarget, yTarget) - 36)) {
             xStop();
             yDir = -1;
         }
@@ -122,7 +122,7 @@ public class Player implements Sprite {
 
     public void down() {
         dir = 'D';
-        if (canMove(getIndex(tar_x, tar_y) + 36)) {
+        if (canMove(getIndex(xTarget, yTarget) + 36)) {
             xStop();
             yDir = 1;
         }
@@ -156,8 +156,8 @@ public class Player implements Sprite {
     public void reset() {
         this.xPx = xOrigin;
         this.yPx = yOrigin;
-        this.tar_x = xPx;
-        this.tar_y = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
         xStop();
         yStop();
     }

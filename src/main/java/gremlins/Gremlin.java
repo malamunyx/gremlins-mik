@@ -13,10 +13,10 @@ public class Gremlin implements Sprite {
     private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
     private int yOrigin;
 
-    private int tar_x;
-    private int tar_y;
-    private int xDir = 0;
-    private int yDir = 0;
+    private int xTarget;
+    private int yTarget;
+//    private int xDir = 0;
+//    private int yDir = 0;
     private int xVel = 0;
     private int yVel = 0;
 
@@ -29,8 +29,8 @@ public class Gremlin implements Sprite {
         this.yPx = yPx;
         this.xOrigin = xPx;
         this.yOrigin = yPx;
-        this.tar_x = xPx;
-        this.tar_y = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
     }
 
     public void fire() {
@@ -47,7 +47,7 @@ public class Gremlin implements Sprite {
         if (!stopped && !currentGame.canWalk(getIndex(xPx, yPx) + getDirNum()))
             stopped = true;
 
-        if (xPx == tar_x && yPx == tar_y) {
+        if (xPx == xTarget && yPx == yTarget) {
             xVel = 0;
             yVel = 0;
 
@@ -58,16 +58,16 @@ public class Gremlin implements Sprite {
 
             if (dir == 'U') {
                 yVel = -1 * speed;
-                tar_y += yVel * App.SPRITESIZE;
+                yTarget += yVel * App.SPRITESIZE;
             } else if (dir == 'D') {
                 yVel = 1 * speed;
-                tar_y += yVel * App.SPRITESIZE;
+                yTarget += yVel * App.SPRITESIZE;
             } else if (dir == 'L') {
                 xVel = -1 * speed;
-                tar_x += xVel * App.SPRITESIZE;
+                xTarget += xVel * App.SPRITESIZE;
             } else if (dir == 'R') {
                 xVel = 1 * speed;
-                tar_x += xVel * App.SPRITESIZE;
+                xTarget += xVel * App.SPRITESIZE;
             }
         } else {
             xPx += xVel;
@@ -128,8 +128,8 @@ public class Gremlin implements Sprite {
         stopped = true;
         this.xVel = 0;
         this.yVel = 0;
-        this.tar_x = xPx;
-        this.tar_y = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
     }
 
     public void levelReset() {
@@ -139,8 +139,8 @@ public class Gremlin implements Sprite {
         this.yPx = yOrigin;
         this.xVel = 0;
         this.yVel = 0;
-        this.tar_x = xPx;
-        this.tar_y = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
 
     }
 
