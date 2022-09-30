@@ -89,8 +89,6 @@ public class App extends PApplet {
         lives = loadLives(config);
         currentGame = loadGame(level);
         currentPlayer = currentGame.getPlayer();
-
-
     }
 
     /**
@@ -98,6 +96,11 @@ public class App extends PApplet {
      */
     @Override
     public void keyPressed(){
+        if (!looping) { // restart game.
+            gameSetup();
+            loop();
+        }
+
         if (keyCode == UP)
             currentPlayer.up();
         else if (keyCode == DOWN)
@@ -129,31 +132,42 @@ public class App extends PApplet {
      */
     @Override
     public void draw() {
+        fill(0);
+        textAlign(CENTER, CENTER);
+
         if (lives > 0) {
             currentGame.draw(this);
-            text(frameRate, 5, 15);
             textSize(12);
+            text((int)frameRate, 25, 10);
+
+            textSize(18);
+            text("Lives: ", 90, 685);
+
+            text(String.format("Level %d/%d", level+1, maxLevel), (float)WIDTH/2, 685);
 
             for (int i = 0; i < lives; ++i) {
-                image(wizard[0], 50 + i * 25, 680);
+                image(wizard[0], 120 + i * 25, 680);
             }
 
             if (currentGame.playerWin()) {
-                if (++level < maxLevel) {
+                if (++level < maxLevel) { // Level up
                     currentGame = loadGame(level);
                     currentPlayer = currentGame.getPlayer();
-                } else {
+                } else { // Game win
                     noLoop();
-                    background(0, 255, 0);
+                    endGameScreen("YOU WIN", 0, 255, 0);
                 }
             }
-
-
-
         } else {
             noLoop();
-            background(255, 0, 0);
+            endGameScreen("YOU LOSE", 255, 0, 0);
         }
+    }
+
+    private void endGameScreen(String text, int r, int g, int b) {
+        background(r, g, b);
+        textSize(50);
+        text(text, (float)WIDTH/2, (float)HEIGHT/2);
     }
 
     private Game loadGame(int level) {

@@ -40,8 +40,8 @@ public class Gremlin implements Sprite {
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
-        a.text(dir, xPx, yPx);
-        a.fill(0, 10, 10);
+//        a.text(dir, xPx, yPx);
+//        a.fill(0, 10, 10);
 
 
         if (!stopped && !currentGame.canWalk(getIndex(xPx, yPx) + getDirNum()))

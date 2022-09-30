@@ -34,7 +34,6 @@ public class Player implements Sprite {
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
-        a.text(charge, xPx, yPx);
         a.rect(600, 680, ((float)charge / currentGame.wizardCooldown)*100, 5);
 
         // RECHARGE COOLDOWN
