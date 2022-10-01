@@ -43,7 +43,7 @@ public class Fireball implements Projectile, Sprite{
         if (s instanceof Gremlin || s instanceof Slime) {
             int xDist = Math.abs(s.getCentreX() - this.getCentreX());
             int yDist = Math.abs(s.getCentreY() - this.getCentreY());
-            return (xDist < 20 && yDist < 20);
+            return (xDist < App.SPRITESIZE && yDist < App.SPRITESIZE);
         } else {
             return false;
         }
@@ -72,11 +72,11 @@ public class Fireball implements Projectile, Sprite{
     }
 
     public int getCentreX() {
-        return this.xPx + xOffset;
+        return this.xPx + Sprite.xOffset;
     }
 
     public int getCentreY() {
-        return this.yPx + xOffset;
+        return this.yPx + Sprite.xOffset;
     }
 
     public void reset() {

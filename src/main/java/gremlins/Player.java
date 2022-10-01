@@ -73,7 +73,7 @@ public class Player implements Sprite {
         if (s instanceof Gremlin || s instanceof Slime) {
             int xDist = Math.abs(s.getCentreX() - this.getCentreX());
             int yDist = Math.abs(s.getCentreY() - this.getCentreY());
-            return (xDist < 20 && yDist < 20);
+            return (xDist < App.SPRITESIZE && yDist < App.SPRITESIZE);
         } else {
             return false;
         }
@@ -163,11 +163,11 @@ public class Player implements Sprite {
 
     @Override
     public int getCentreX() {
-        return this.xPx + xOffset;
+        return this.xPx + Sprite.xOffset;
     }
 
     @Override
     public int getCentreY() {
-        return this.yPx + yOffset;
+        return this.yPx + Sprite.yOffset;
     }
 }

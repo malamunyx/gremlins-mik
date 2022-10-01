@@ -5,18 +5,15 @@ import processing.core.PImage;
 import java.util.ArrayList;
 
 public class Gremlin implements Sprite {
-    // must revamp gremlin movement
     private static final int speed = 1;
     private Game currentGame;
     private int xPx;
     private int yPx;
-    private int xOrigin; // THIS IS DUE FOR REMOVAL WHEN RESET WORKS
+    private int xOrigin;
     private int yOrigin;
 
     private int xTarget;
     private int yTarget;
-//    private int xDir = 0;
-//    private int yDir = 0;
     private int xVel = 0;
     private int yVel = 0;
 
@@ -40,11 +37,8 @@ public class Gremlin implements Sprite {
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
-//        a.text(dir, xPx, yPx);
-//        a.fill(0, 10, 10);
 
-
-        if (!stopped && !currentGame.canWalk(getIndex(xPx, yPx) + getDirNum()))
+        if (!stopped && !canMove(getIndex(xPx, yPx) + getDirNum()))
             stopped = true;
 
         if (xPx == xTarget && yPx == yTarget) {
@@ -99,11 +93,6 @@ public class Gremlin implements Sprite {
             return 36;
         else
             return 0;
-    }
-
-    public void stop() {
-        xVel = 0;
-        yVel = 0;
     }
 
     public boolean canMove(int idx) {
@@ -177,12 +166,12 @@ public class Gremlin implements Sprite {
 
     @Override
     public int getCentreX() {
-        return this.xPx + xOffset;
+        return this.xPx + Sprite.xOffset;
     }
 
     @Override
     public int getCentreY() {
-        return this.yPx + yOffset;
+        return this.yPx + Sprite.yOffset;
     }
 
     private int getDirInList(ArrayList<Character> dirArray, Character c) throws Error {
