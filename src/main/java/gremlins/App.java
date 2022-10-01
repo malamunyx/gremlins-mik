@@ -5,6 +5,8 @@ import processing.core.PImage;
 import processing.data.JSONObject;
 import processing.data.JSONArray;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.io.*;
 
@@ -56,22 +58,22 @@ public class App extends PApplet {
         frameRate(FPS);
 
         // Load images during setup
-        this.door = loadImage(this.getClass().getResource("door.png").getPath().replace("%20", ""));
-        this.stonewall = loadImage(this.getClass().getResource("stonewall.png").getPath().replace("%20", ""));
-        this.brickwall[0] = loadImage(this.getClass().getResource("brickwall.png").getPath().replace("%20", ""));
-        this.brickwall[1] = loadImage(this.getClass().getResource("brickwall_destroyed0.png").getPath().replace("%20", ""));
-        this.brickwall[2] = loadImage(this.getClass().getResource("brickwall_destroyed1.png").getPath().replace("%20", ""));
-        this.brickwall[3] = loadImage(this.getClass().getResource("brickwall_destroyed2.png").getPath().replace("%20", ""));
-        this.brickwall[4] = loadImage(this.getClass().getResource("brickwall_destroyed3.png").getPath().replace("%20", ""));
+        this.door = getImage("door.png");
+        this.stonewall = getImage("stonewall.png");
+        this.brickwall[0] = getImage("brickwall.png");
+        this.brickwall[1] = getImage("brickwall_destroyed0.png");
+        this.brickwall[2] = getImage("brickwall_destroyed1.png");
+        this.brickwall[3] = getImage("brickwall_destroyed2.png");
+        this.brickwall[4] = getImage("brickwall_destroyed3.png");
 
-        this.gremlin = loadImage(this.getClass().getResource("gremlin.png").getPath().replace("%20", ""));
-        this.slime = loadImage(this.getClass().getResource("slime.png").getPath().replace("%20", ""));
+        this.gremlin = getImage("gremlin.png");
+        this.slime = getImage("slime.png");
 
-        this.wizard[0] = loadImage(this.getClass().getResource("wizard0.png").getPath().replace("%20", ""));
-        this.wizard[1] = loadImage(this.getClass().getResource("wizard1.png").getPath().replace("%20", ""));
-        this.wizard[2] = loadImage(this.getClass().getResource("wizard2.png").getPath().replace("%20", ""));
-        this.wizard[3] = loadImage(this.getClass().getResource("wizard3.png").getPath().replace("%20", ""));
-        this.fireball = loadImage(this.getClass().getResource("fireball.png").getPath().replace("%20", ""));
+        this.wizard[0] = getImage("wizard0.png");
+        this.wizard[1] = getImage("wizard1.png");
+        this.wizard[2] = getImage("wizard2.png");
+        this.wizard[3] = getImage("wizard3.png");
+        this.fireball = getImage("fireball.png");
 
         // Always start at first level, hence first index of JSONArray.
         gameSetup();
@@ -196,6 +198,15 @@ public class App extends PApplet {
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
         return levels.size();
+    }
+
+    private PImage getImage(String filename) {
+        try {
+            return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8));
+        } catch (NullPointerException e) {
+            System.err.printf("Could not locate resource file path for %s\n", filename);
+            return null;
+        }
     }
 
     public static void main(String[] args) {
