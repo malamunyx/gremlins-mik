@@ -26,10 +26,21 @@ public class Game {
         loadMap(currentLevel);
     }
 
+    /**
+     * Calls the app to draw the game level and all its processes of the current level game.
+     * @param a App that extends Processing Applet handling all Processing library processes.
+     */
     public void draw(App a) {
         a.background(211);
+        updateMap(a);
+        updateSprites(a);
+    }
 
-        // draw map -> turn into own method?
+    /**
+     * Calls the app to draw the map tile layout.
+     * @param a App that extends Processing Applet handling all Processing library processes.
+     */
+    public void updateMap(App a) {
         for (Tile t : tileMap.values()) {
             if (t instanceof Wall) {
                 if (((Wall) t).canBreak() && ((Wall) t).getStatus() != 5)
@@ -40,17 +51,21 @@ public class Game {
                 t.draw(a, a.door);
             }
         }
-        updateSprites(a);
     }
 
-    public Tile getTile(int idx) {
+    /**
+     * Returns the Tile object of given map index.
+     * @param idx Map index of tile location.
+     * @return Tile object in position with associated map index.
+     */
+    public Tile getTile(int idx) { // EXPLAIN HOW MAP INDEXING WORKS IN DOC
         return this.tileMap.get(idx);
     }
 
     /**
-     * Determines if location is accessible by sprites
-     * @param idx hash index of tile location
-     * @return boolean value representing tile accessibility
+     * Determines if location is accessible by sprites.
+     * @param idx Map index of tile location.
+     * @return Boolean value representing tile accessibility.
      */
     public boolean canWalk(int idx) {
         if (tileMap.containsKey(idx) && getTile(idx) instanceof Wall)
@@ -59,18 +74,35 @@ public class Game {
             return true;
     }
 
+    /**
+     * Returns Player object associated with the current Game level.
+     * @return Player object
+     */
     public Player getPlayer() {
         return this.player;
     }
 
+    /**
+     * Adds sprite into the Sprite ArrayList.
+     * @param s Objects that implement Sprite interface.
+     */
     public void addSprite(Sprite s) {
         sprites.add(s);
     }
 
+    /**
+     * Returns random integer between in range [0, n), utilised mainly for Gremlin directionality.
+     * @param n Integer upper bound (Not inclusive).
+     * @return Randomised integer.
+     */
     public int getRandomInt(int n) {
         return rg.nextInt(n);
     }
 
+    /**
+     * Calls the app to draw all sprites, handle sprite collision, and delete any neutralised projectile sprites.
+     * @param a App that extends Processing Applet handling all Processing library processes.
+     */
     private void updateSprites(App a) {
         // Draw or update sprites.
         for (int i = sprites.size()-1; i >= 0; --i) {
@@ -120,10 +152,18 @@ public class Game {
         }
     }
 
-    public boolean playerWin() {
+    /**
+     * Returns boolean to determine whether the player object has beat the level.
+     * @return Boolean variable whether Player object touched the exit door.
+     */
+    public boolean playerWin() { // location equivalency
         return getTile(player.getIndex(player.getCentreX(), player.getCentreY())) instanceof Exit;
     }
 
+    /**
+     * Reads the level file determined by the JSON config file, creating the Tile and Sprite (Player, Gremlin) objects.
+     * @param levelFile Text file containing the level layout.
+     */
     private void loadMap(File levelFile) {
         try {
             Scanner sc = new Scanner(levelFile);
@@ -168,6 +208,9 @@ public class Game {
         }
     }
 
+    /**
+     * Resets the level to its original, initialised status, undoing any changes by Player and resetting sprite positions.
+     */
     public void resetLevel() {
         for (Tile t : tileMap.values()) {
             if (t instanceof Wall && ((Wall) t).isBroken()) {
@@ -180,7 +223,5 @@ public class Game {
             else
                 s.reset();
         }
-
-
     }
 }
