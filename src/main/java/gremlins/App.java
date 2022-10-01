@@ -79,10 +79,19 @@ public class App extends PApplet {
         gameSetup();
     }
 
+    /**
+     * Decrements the current player's life count.
+     */
     public void playerDeath() {
         --lives;
     }
 
+    /**
+     * Sets app settings and variables to initial game start settings (As identified by config.json).
+     * Level always start at initial index of parsed JSON array.
+     * Lives are determined by config.json file.
+     * sets currentGame to the determined level and its related player.
+     */
     private void gameSetup() { // maybe turn into one big readJSON method.....
         File config = new File(configPath);
 
@@ -166,12 +175,24 @@ public class App extends PApplet {
         }
     }
 
+    /**
+     * Displays a screen with desired text and RGB values for background colour.
+     * @param text String for end game message to be displayed.
+     * @param r RGB value for red.
+     * @param g RGB value for green.
+     * @param b RGB value for blue.
+     */
     private void endGameScreen(String text, int r, int g, int b) {
         background(r, g, b);
         textSize(50);
         text(text, (float)WIDTH/2, (float)HEIGHT/2);
     }
 
+    /**
+     * Returns Game object of the associated level.
+     * @param level Integer index for to be parsed into JSON array (First level is index 0).
+     * @return Game object representing the associated level.
+     */
     private Game loadGame(int level) {
         //JSON Handling
         JSONObject conf = loadJSONObject(new File(this.configPath));
@@ -185,21 +206,41 @@ public class App extends PApplet {
 
     }
 
+    /**
+     * Returns the Player object for its related game (level).
+     * @param currentGame the current (level) Game class that is loaded.
+     * @return Player object of the associated level Game class that is loaded by the level text file.
+     */
     private Player getCurrentPlayer(Game currentGame) {
         return currentGame.getPlayer();
     }
 
-
+    /**
+     * Returns the number of lives given to the player when the game is initialised.
+     * @param f JSON config file.
+     * @return Integer representing the number of lives player gets when game is started.
+     */
     private int loadLives(File f) {
         JSONObject conf = loadJSONObject(new File(this.configPath));
         return conf.getInt("lives");
     }
+
+    /**
+     * Returns the size of levels JSON array, with its size representing the final level.
+     * @param f JSON config file.
+     * @return Integer representing final level, and the number of levels.
+     */
     private int getMaxLevel(File f) {
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
         return levels.size();
     }
 
+    /**
+     * Returns Processing PImage variable of the associated image resource.
+     * @param filename Image filename in the resources folder.
+     * @return PImage variable representing images for the Processing library to handle.
+     */
     private PImage getImage(String filename) {
         try {
             return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8));
