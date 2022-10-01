@@ -243,8 +243,8 @@ public class App extends PApplet {
      */
     private PImage getImage(String filename) {
         try {
-            return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8));
-        } catch (NullPointerException e) {
+            return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8.toString()));
+        } catch (UnsupportedEncodingException e) {
             System.err.printf("Could not locate resource file path for %s\n", filename);
             return null;
         }
