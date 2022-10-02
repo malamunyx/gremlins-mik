@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Game {
+public class Level {
     private Random rg = new Random();
     int wizardCooldown;
     int enemyCooldown;
@@ -16,11 +16,11 @@ public class Game {
     private HashMap<Integer, Tile> tileMap = new HashMap<>();
     private ArrayList<Sprite> sprites = new ArrayList<>();
 
-    public static Game generateGame(File currentLevel, double wizardCooldown, double enemyCooldown) {
-        return new Game(currentLevel, wizardCooldown, enemyCooldown);
+    public static Level generateGame(File currentLevel, double wizardCooldown, double enemyCooldown) {
+        return new Level(currentLevel, wizardCooldown, enemyCooldown);
     }
 
-    public Game(File currentLevel, double wizardCooldown, double enemyCooldown) {
+    public Level(File currentLevel, double wizardCooldown, double enemyCooldown) {
         this.wizardCooldown = (int)Math.ceil(wizardCooldown * App.FPS);
         this.enemyCooldown = (int)(enemyCooldown * App.FPS);
         loadMap(currentLevel);
@@ -55,7 +55,7 @@ public class Game {
 
     /**
      * Returns the Tile object of given map index.
-     * @param idx Map index of tile location.
+     * @param idx Location index of tile location.
      * @return Tile object in position with associated map index.
      */
     public Tile getTile(int idx) { // EXPLAIN HOW MAP INDEXING WORKS IN DOC
@@ -64,7 +64,7 @@ public class Game {
 
     /**
      * Determines if location is accessible by sprites.
-     * @param idx Map index of tile location.
+     * @param idx Location index of tile location.
      * @return Boolean value representing tile accessibility.
      */
     public boolean canWalk(int idx) {
@@ -100,7 +100,7 @@ public class Game {
     }
 
     /**
-     * Calls the app to draw all sprites, handle sprite collision, and delete any neutralised projectile sprites.
+     * Calls the app to draw all sprites. Simultaneously handle sprite collision, and remove any neutralised projectile sprites.
      * @param a App that extends Processing Applet handling all Processing library processes.
      */
     private void updateSprites(App a) {
@@ -163,8 +163,9 @@ public class Game {
     /**
      * Reads the level file determined by the JSON config file, creating the Tile and Sprite (Player, Gremlin) objects.
      * @param levelFile Text file containing the level layout.
+     * @throws RuntimeException Any violation to map specifications: 36x33, Map bordered by stonewall.
      */
-    private void loadMap(File levelFile) {
+    private void loadMap(File levelFile) throws RuntimeException {
         try {
             Scanner sc = new Scanner(levelFile);
 
@@ -173,7 +174,19 @@ public class Game {
             while (sc.hasNextLine()) {
                 String s = sc.nextLine();
 
+                if (s.length() != 36)
+                    throw new RuntimeException(String.format("Map Specification violation: vertical Dimensions of map must be 36 Tiles, not %d", s.length()));
+
                 for (int j = 0; j < s.length(); ++j) {
+
+                    if (i == 0 || i == 32) {
+                        if (s.charAt(j) != 'X')
+                            throw new RuntimeException("Map must be bordered by stonewall");
+                    } else if (j == 0 || j == 35) {
+                        if (s.charAt(j) != 'X')
+                            throw new RuntimeException("Map must be bordered by stonewall");
+                    }
+
                     switch (s.charAt(j)) {
                         case 'X':
                             tileMap.put(hashIdx, Tile.stoneWallFactory(j*20, i*20));
@@ -200,6 +213,10 @@ public class Game {
                 }
                 ++i;
             }
+
+            if (i > 33)
+                throw new RuntimeException(String.format("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not %d", i));
+
             sc.close();
         } catch (FileNotFoundException e) {
             System.err.printf("File %s not found%n", levelFile.getName());
