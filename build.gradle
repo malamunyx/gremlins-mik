@@ -26,6 +26,9 @@ dependencies {
     implementation 'com.google.guava:guava:28.0-jre'
     implementation 'org.processing:core:3.3.7'
 
+    // Use AssertJ for testing.
+    testImplementation 'org.assertj:assertj-core:3.11.1'
+
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
 
