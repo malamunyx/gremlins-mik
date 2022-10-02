@@ -15,6 +15,11 @@ public class Wall extends Tile {
         this.breakable = breakable;
     }
 
+    /**
+     * Calls the app to draw the map tile object every frame. Contains frame counting feature to update tile status.
+     * @param a App that extends Processing Applet handling all Processing library processes.
+     * @param img PImage variable for image to be displayed.
+     */
     @Override
     public void draw(App a, PImage img) {
         a.image(img, xPx, yPx);
@@ -26,19 +31,33 @@ public class Wall extends Tile {
         }
     }
 
+    /**
+     * Returns whether object can be breakable and interacted by Player.
+     * @return Boolean variable representing Player interaction capability.
+     */
     public boolean canBreak() {
         return this.breakable;
     }
 
+    /**
+     * Returns whether object has been interacted by Player.
+     * @return Boolean variable representing whether Wall is broken.
+     */
     public boolean isBroken() {
         return this.broken;
     }
 
+    /**
+     * Sets the wall broken status to true.
+     */
     public void breakWall() {
         if (breakable)
             broken = true;
     }
 
+    /**
+     * Sets the wall broken status to false.
+     */
     public void unbreakWall() {
         if (broken) {
             broken = false;
@@ -47,6 +66,10 @@ public class Wall extends Tile {
         }
     }
 
+    /**
+     * Returns the Wall integer status. Utilised for PImage array traversal.
+     * @return Integer representing Wall status.
+     */
     public int getStatus() {
         return this.status;
     }

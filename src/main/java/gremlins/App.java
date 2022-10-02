@@ -7,7 +7,6 @@ import processing.data.JSONArray;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 import java.io.*;
 
 
@@ -34,9 +33,8 @@ public class App extends PApplet {
     private int lives;
     private int level;
     private int maxLevel;
-    private Game currentGame;
+    private Level currentLevel;
     private Player currentPlayer;
-
 
     public App() {
         this.configPath = "config.json";
@@ -98,8 +96,8 @@ public class App extends PApplet {
         level = 0;
         maxLevel = getMaxLevel(config);
         lives = loadLives(config);
-        currentGame = loadGame(level);
-        currentPlayer = currentGame.getPlayer();
+        currentLevel = loadGame(level);
+        currentPlayer = getCurrentPlayer(currentLevel);
     }
 
     /**
@@ -147,7 +145,7 @@ public class App extends PApplet {
         textAlign(CENTER, CENTER);
 
         if (lives > 0) {
-            currentGame.draw(this);
+            currentLevel.draw(this);
             textSize(12);
             text((int)frameRate, 25, 10);
 
@@ -160,10 +158,10 @@ public class App extends PApplet {
                 image(wizard[0], 120 + i * 25, 680);
             }
 
-            if (currentGame.playerWin()) {
+            if (currentLevel.playerWin()) {
                 if (++level < maxLevel) { // Level up
-                    currentGame = loadGame(level);
-                    currentPlayer = currentGame.getPlayer();
+                    currentLevel = loadGame(level);
+                    currentPlayer = currentLevel.getPlayer();
                 } else { // Game win
                     noLoop();
                     endGameScreen("YOU WIN", 0, 255, 0);
@@ -192,45 +190,59 @@ public class App extends PApplet {
      * Returns Game object of the associated level.
      * @param level Integer index for to be parsed into JSON array (First level is index 0).
      * @return Game object representing the associated level.
+     * @throws IndexOutOfBoundsException Indication that level index is out of bounds.
      */
-    private Game loadGame(int level) {
+    private Level loadGame(int level) throws IndexOutOfBoundsException {
         //JSON Handling
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
+
+        if (level >= levels.size() || level < 0)
+            throw new IndexOutOfBoundsException("Level index is greater than or equal to number of levels");
 
         File currentLevel = new File(levels.getJSONObject(level).getString("layout"));
         double wizardCooldown = levels.getJSONObject(level).getDouble("wizard_cooldown");
         double enemyCooldown = levels.getJSONObject(level).getDouble("enemy_cooldown");
 
-        return Game.generateGame(currentLevel, wizardCooldown, enemyCooldown);
-
+        return Level.generateGame(currentLevel, wizardCooldown, enemyCooldown);
     }
 
     /**
      * Returns the Player object for its related game (level).
-     * @param currentGame the current (level) Game class that is loaded.
+     * @param currentLevel the current (level) Game class that is loaded.
      * @return Player object of the associated level Game class that is loaded by the level text file.
+     * @throws NullPointerException Indication that Level object reference is null.
      */
-    private Player getCurrentPlayer(Game currentGame) {
-        return currentGame.getPlayer();
+    private Player getCurrentPlayer(Level currentLevel) throws NullPointerException {
+        if (currentLevel == null)
+            throw new NullPointerException("Current level object is null");
+        return currentLevel.getPlayer();
     }
 
     /**
      * Returns the number of lives given to the player when the game is initialised.
      * @param f JSON config file.
      * @return Integer representing the number of lives player gets when game is started.
+     * @throws NullPointerException Indication that config File object reference is null.
      */
-    private int loadLives(File f) {
+    private int loadLives(File f) throws NullPointerException {
+        if (f == null)
+            throw new NullPointerException("Config file parameter is null");
+
         JSONObject conf = loadJSONObject(new File(this.configPath));
         return conf.getInt("lives");
     }
 
     /**
      * Returns the size of levels JSON array, with its size representing the final level.
-     * @param f JSON config file.
      * @return Integer representing final level, and the number of levels.
+     * @param f JSON config file.
+     * @throws NullPointerException Indication that config File object reference is null.
      */
-    private int getMaxLevel(File f) {
+    private int getMaxLevel(File f) throws NullPointerException {
+        if (f == null)
+            throw new NullPointerException("Config file parameter is null");
+
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
         return levels.size();
@@ -240,13 +252,13 @@ public class App extends PApplet {
      * Returns Processing PImage variable of the associated image resource.
      * @param filename Image filename in the resources folder.
      * @return PImage variable representing images for the Processing library to handle.
+     * @throws RuntimeException Indication that image file is unable to be located in resources folder.
      */
-    private PImage getImage(String filename) {
+    private PImage getImage(String filename) throws RuntimeException {
         try {
             return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8.toString()));
         } catch (UnsupportedEncodingException e) {
-            System.err.printf("Could not locate resource file path for %s\n", filename);
-            return null;
+            throw new RuntimeException(String.format("Could not locate resource file path for %s", filename));
         }
     }
 
