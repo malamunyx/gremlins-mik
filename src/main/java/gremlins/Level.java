@@ -16,14 +16,14 @@ public class Level {
     private HashMap<Integer, Tile> tileMap = new HashMap<>();
     private ArrayList<Sprite> sprites = new ArrayList<>();
 
-    public static Level generateGame(File currentLevel, double wizardCooldown, double enemyCooldown) {
+    public static Level generateLevel(File currentLevel, double wizardCooldown, double enemyCooldown) {
         return new Level(currentLevel, wizardCooldown, enemyCooldown);
     }
 
     public Level(File currentLevel, double wizardCooldown, double enemyCooldown) {
         this.wizardCooldown = (int)Math.ceil(wizardCooldown * App.FPS);
         this.enemyCooldown = (int)(enemyCooldown * App.FPS);
-        loadMap(currentLevel);
+        loadLevel(currentLevel);
     }
 
     /**
@@ -87,7 +87,8 @@ public class Level {
      * @param s Objects that implement Sprite interface.
      */
     public void addSprite(Sprite s) {
-        sprites.add(s);
+        if (s != null)
+            sprites.add(s);
     }
 
     /**
@@ -103,7 +104,7 @@ public class Level {
      * Calls the app to draw all sprites. Simultaneously handle sprite collision, and remove any neutralised projectile sprites.
      * @param a App that extends Processing Applet handling all Processing library processes.
      */
-    private void updateSprites(App a) {
+    public void updateSprites(App a) {
         // Draw or update sprites.
         for (int i = sprites.size()-1; i >= 0; --i) {
             Sprite s1 = sprites.get(i);
@@ -165,7 +166,7 @@ public class Level {
      * @param levelFile Text file containing the level layout.
      * @throws RuntimeException Any violation to map specifications: 36x33, Map bordered by stonewall.
      */
-    private void loadMap(File levelFile) throws RuntimeException {
+    public void loadLevel(File levelFile) throws RuntimeException {
         try {
             Scanner sc = new Scanner(levelFile);
 
@@ -215,7 +216,10 @@ public class Level {
             }
 
             if (i > 33)
-                throw new RuntimeException(String.format("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not %d", i));
+                throw new RuntimeException("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not " + i);
+
+            if (player == null)
+                throw new RuntimeException("Player not detected in level text file layout");
 
             sc.close();
         } catch (FileNotFoundException e) {
@@ -223,6 +227,14 @@ public class Level {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    /**
+     * Getter for sprites array list.
+     * @return level sprites arraylist.
+     */
+    public ArrayList<Sprite> getSprites() {
+        return this.sprites;
     }
 
     /**
