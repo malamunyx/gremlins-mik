@@ -116,6 +116,13 @@ public class AppClassTest {
         assertThat(app.getLevel()).isEqualTo(1); // By default start level at 1.
     }
 
+    /* Player Death Testing */
+    public void PlayerDeathDecrementsLives() {
+        App na = new App();
 
-
+        na.gameSetup();
+        int originalLives = na.getLives();
+        na.playerDeath();
+        assertThat(na.getLives()).isEqualTo(originalLives - 1);
+    }
 }
