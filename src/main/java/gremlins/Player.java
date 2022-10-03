@@ -206,10 +206,7 @@ public class Player implements Sprite {
      */
     @Override
     public void reset() {
-        this.xPx = xOrigin;
-        this.yPx = yOrigin;
-        this.xTarget = xPx;
-        this.yTarget = yPx;
+        SetPosition(xOrigin, yOrigin);
         xStop();
         yStop();
     }
@@ -230,5 +227,18 @@ public class Player implements Sprite {
     @Override
     public int getCentreY() {
         return this.yPx + Sprite.yOffset;
+    }
+
+    /**
+     * Sets position of Player object to desired pixel position.
+     * xTarget and yTarget resets to Player's respective pixel position.
+     * @param xPx x pixel position.
+     * @param yPx y pixel position.
+     */
+    public void SetPosition(int xPx, int yPx) {
+        this.xPx = xPx;
+        this.yPx = yPx;
+        this.xTarget = xPx;
+        this.yTarget = yPx;
     }
 }
