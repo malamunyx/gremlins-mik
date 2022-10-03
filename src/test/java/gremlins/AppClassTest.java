@@ -117,6 +117,7 @@ public class AppClassTest {
     }
 
     /* Player Death Testing */
+    @Test
     public void PlayerDeathDecrementsLives() {
         App na = new App();
 
