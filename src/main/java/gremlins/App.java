@@ -78,26 +78,19 @@ public class App extends PApplet {
     }
 
     /**
-     * Decrements the current player's life count.
-     */
-    public void playerDeath() {
-        --lives;
-    }
-
-    /**
      * Sets app settings and variables to initial game start settings (As identified by config.json).
      * Level always start at initial index of parsed JSON array.
      * Lives are determined by config.json file.
      * sets currentGame to the determined level and its related player.
      */
-    private void gameSetup() { // maybe turn into one big readJSON method.....
+    public void gameSetup() { // maybe turn into one big readJSON method.....
         File config = new File(configPath);
 
-        level = 0;
-        maxLevel = getMaxLevel(config);
+        level = 1;
+        maxLevel = LoadMaxLevel(config);
         lives = loadLives(config);
-        currentLevel = loadGame(level);
-        currentPlayer = getCurrentPlayer(currentLevel);
+        currentLevel = loadLevel(level);
+        currentPlayer = LoadCurrentPlayer(currentLevel);
     }
 
     /**
@@ -159,8 +152,8 @@ public class App extends PApplet {
             }
 
             if (currentLevel.playerWin()) {
-                if (++level < maxLevel) { // Level up
-                    currentLevel = loadGame(level);
+                if (++level <= maxLevel) { // Level up
+                    currentLevel = loadLevel(level);
                     currentPlayer = currentLevel.getPlayer();
                 } else { // Game win
                     noLoop();
@@ -180,7 +173,7 @@ public class App extends PApplet {
      * @param g RGB value for green.
      * @param b RGB value for blue.
      */
-    private void endGameScreen(String text, int r, int g, int b) {
+    public void endGameScreen(String text, int r, int g, int b) {
         background(r, g, b);
         textSize(50);
         text(text, (float)WIDTH/2, (float)HEIGHT/2);
@@ -188,35 +181,42 @@ public class App extends PApplet {
 
     /**
      * Returns Game object of the associated level.
-     * @param level Integer index for to be parsed into JSON array (First level is index 0).
+     * @param level Integer level number to be parsed into JSON array (level is decremented for Array indexing purposes).
      * @return Game object representing the associated level.
      * @throws IndexOutOfBoundsException Indication that level index is out of bounds.
      */
-    private Level loadGame(int level) throws IndexOutOfBoundsException {
+    public Level loadLevel(int level) throws IndexOutOfBoundsException {
+        --level; // For indexing purposes.
+
         //JSON Handling
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
 
         if (level >= levels.size() || level < 0)
-            throw new IndexOutOfBoundsException("Level index is greater than or equal to number of levels");
+            throw new IndexOutOfBoundsException("Level number is beyond level range");
 
         File currentLevel = new File(levels.getJSONObject(level).getString("layout"));
         double wizardCooldown = levels.getJSONObject(level).getDouble("wizard_cooldown");
         double enemyCooldown = levels.getJSONObject(level).getDouble("enemy_cooldown");
 
-        return Level.generateGame(currentLevel, wizardCooldown, enemyCooldown);
+        return Level.generateLevel(currentLevel, wizardCooldown, enemyCooldown);
     }
 
     /**
      * Returns the Player object for its related game (level).
      * @param currentLevel the current (level) Game class that is loaded.
      * @return Player object of the associated level Game class that is loaded by the level text file.
-     * @throws NullPointerException Indication that Level object reference is null.
      */
-    private Player getCurrentPlayer(Level currentLevel) throws NullPointerException {
-        if (currentLevel == null)
-            throw new NullPointerException("Current level object is null");
+    public Player LoadCurrentPlayer(Level currentLevel) {
+        if (currentLevel == null) {
+            throw new NullPointerException("Level cannot be null for Player retrieval");
+        }
         return currentLevel.getPlayer();
+    }
+
+    /**Decrements the current player's life count. */
+    public void playerDeath() {
+        --lives;
     }
 
     /**
@@ -225,7 +225,7 @@ public class App extends PApplet {
      * @return Integer representing the number of lives player gets when game is started.
      * @throws NullPointerException Indication that config File object reference is null.
      */
-    private int loadLives(File f) throws NullPointerException {
+    public int loadLives(File f) throws NullPointerException {
         if (f == null)
             throw new NullPointerException("Config file parameter is null");
 
@@ -239,7 +239,7 @@ public class App extends PApplet {
      * @param f JSON config file.
      * @throws NullPointerException Indication that config File object reference is null.
      */
-    private int getMaxLevel(File f) throws NullPointerException {
+    public int LoadMaxLevel(File f) throws NullPointerException {
         if (f == null)
             throw new NullPointerException("Config file parameter is null");
 
@@ -249,17 +249,50 @@ public class App extends PApplet {
     }
 
     /**
-     * Returns Processing PImage variable of the associated image resource.
+     *
      * @param filename Image filename in the resources folder.
      * @return PImage variable representing images for the Processing library to handle.
      * @throws RuntimeException Indication that image file is unable to be located in resources folder.
      */
-    private PImage getImage(String filename) throws RuntimeException {
+
+    /**
+     * Returns Processing PImage variable of the associated image resource.
+     * @param filename Image filename in the resources folder.
+     * @return PImage variable representing images for the Processing library to handle.
+     * @throws RuntimeException When image file is unable to be located in resources folder.
+     * @throws NullPointerException When file parameter is null.
+     */
+    public PImage getImage(String filename) throws RuntimeException, NullPointerException {
+        if (filename == null) {
+            throw new NullPointerException("Null parameter is invalid");
+        }
         try {
             return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8.toString()));
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(String.format("Could not locate resource file path for %s", filename));
+            throw new RuntimeException("Could not locate resource file path for " + filename);
         }
+    }
+
+    /**
+     * Getter method for amount of lives
+     * @return Number of lives available.
+     */
+    public int getLives() {
+        return lives;
+    }
+    /**
+     * Getter method for current Level
+     * @return Current Level
+     */
+    public int getLevel() {
+        return level;
+    }
+    /**
+     * Getter method for max Level
+     * @return Number of levels, maximum level.
+     */
+    public int getMaxLevel() {
+        return maxLevel;
     }
 
     public static void main(String[] args) {
