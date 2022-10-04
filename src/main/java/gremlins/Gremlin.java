@@ -4,30 +4,13 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-public class Gremlin implements Sprite {
+public class Gremlin extends LiveEntity implements Sprite {
     private static final int speed = 1;
-    private Level currentLevel;
-    private int xPx;
-    private int yPx;
-    private int xOrigin;
-    private int yOrigin;
-
-    private int xTarget;
-    private int yTarget;
-    private int xVel = 0;
-    private int yVel = 0;
-
-    private char dir = '\0';
     private boolean stopped = true;
 
     public Gremlin(int xPx, int yPx, Level g) {
-        this.currentLevel = g;
-        this.xPx = xPx;
-        this.yPx = yPx;
-        this.xOrigin = xPx;
-        this.yOrigin = yPx;
-        this.xTarget = xPx;
-        this.yTarget = yPx;
+        super(xPx, yPx, g);
+        this.dir = '\0';
     }
 
     /**
@@ -87,13 +70,12 @@ public class Gremlin implements Sprite {
         }
     }
 
-    //    @Override maybe part of livenentity class?
-
     /**
      * Returns location index increment/decrement number based on Gremlin directionality.
      * [Left: -1] [Right: +1] [Up: -36(Map width)] [Down: +36 (Map width)]
      * @return Integer location index difference.
      */
+    @Override
     public int getDirNum() {
         if (dir == 'L')
             return -1;
@@ -105,15 +87,6 @@ public class Gremlin implements Sprite {
             return 36;
         else
             return 0;
-    }
-
-    /**
-     * Returns whether Gremlin is able to move to a location index.
-     * @param idx Location index.
-     * @return Boolean determining whether no Wall exists, or if it does, it is broken.
-     */
-    public boolean canMove(int idx) {
-        return currentLevel.canWalk(idx);
     }
 
     /**
@@ -165,8 +138,27 @@ public class Gremlin implements Sprite {
     /**
      * Shoot a Slime projectile, instantiating and storing a projectile in the currentLevel sprites ArrayList.
      */
+    @Override
     public void fire() {
         currentLevel.addSprite(Sprite.slimeFactory(xPx, yPx, dir, currentLevel));
+    }
+
+    /**
+     * Return the horizontal pixel position of the Sprite centre.
+     * @return Integer x plane pixel position.
+     */
+    @Override
+    public int getCentreX() {
+        return this.xPx + Sprite.xOffset;
+    }
+
+    /**
+     * Return the vertical pixel position of the Sprite centre.
+     * @return Integer y plane pixel position.
+     */
+    @Override
+    public int getCentreY() {
+        return this.yPx + Sprite.yOffset;
     }
 
     /**
@@ -207,24 +199,6 @@ public class Gremlin implements Sprite {
                 choices.remove(getIdxInList(choices, 'U'));
         }
         return choices.get(currentLevel.getRandomInt(choices.size()));
-    }
-
-    /**
-     * Return the horizontal pixel position of the Sprite centre.
-     * @return Integer x plane pixel position.
-     */
-    @Override
-    public int getCentreX() {
-        return this.xPx + Sprite.xOffset;
-    }
-
-    /**
-     * Return the vertical pixel position of the Sprite centre.
-     * @return Integer y plane pixel position.
-     */
-    @Override
-    public int getCentreY() {
-        return this.yPx + Sprite.yOffset;
     }
 
     /**

@@ -2,33 +2,18 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Player implements Sprite {
+public class Player extends LiveEntity implements Sprite {
     private static final int speed = 2;
-    private Level currentLevel;
     private int charge;
-    private int xPx;
-    private int yPx;
-    private int xOrigin;
-    private int yOrigin;
-
-    private int xTarget;
-    private int yTarget;
     private int xDir = 0;
     private int yDir = 0;
-    private int xVel = 0;
-    private int yVel = 0;
 
-    private char dir = 'L';
+//    private char dir = 'L';
 
     public Player(int xPx, int yPx, Level g) {
-        this.currentLevel = g;
-        this.xPx = xPx;
-        this.yPx = yPx;
-        this.xOrigin = xPx;
-        this.yOrigin = yPx;
-        this.xTarget = xPx;
-        this.yTarget = yPx;
+        super(xPx, yPx, g);
         this.charge = g.wizardCooldown;
+        this.dir = 'L';
     }
 
     /**
@@ -97,6 +82,7 @@ public class Player implements Sprite {
      * @return Integer location index difference.
      * @throws IllegalArgumentException Whenever any char parameter does not represent a direction.
      */
+    @Override
     public int getDirNum() throws IllegalArgumentException {
         switch (dir) {
             case 'L':
@@ -156,8 +142,6 @@ public class Player implements Sprite {
         }
     }
 
-    /* CHANGE XSTOP AND YSTOP TO LEFT/RIGHT STOP AND UP/DOWN STOP */
-
     /**
      * Sets x movement primer to 0 if moving left, keeping player movement until it is positioned in an exact tile.
      */
@@ -194,20 +178,12 @@ public class Player implements Sprite {
      * Shoot a fireball projectile, instantiating and storing a projectile in the currentLevel sprites ArrayList.
      * Checks Player cooldown prior to Fireball object instantiation.
      */
+    @Override
     public void fire() {
         if (charge == currentLevel.wizardCooldown) {
             currentLevel.addSprite(Sprite.fireballFactory(xPx, yPx, dir, currentLevel));
             charge = 0;
         }
-    }
-
-    /**
-     * Returns whether Player is able to move to a location index.
-     * @param idx Location index.
-     * @return Boolean determining whether no Wall exists, or if it does, it is broken.
-     */
-    public boolean canMove(int idx) {
-        return currentLevel.canWalk(idx);
     }
 
     /**

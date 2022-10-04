@@ -1,7 +1,70 @@
 package gremlins;
 
-public interface Projectile {
-    boolean checkWallCollision();
-    boolean isNeutralised();
-    void stop();
+public abstract class Projectile implements Sprite{
+    protected Level currentLevel;
+    protected static final int speed = 4;
+
+    protected int xPx;
+    protected int yPx;
+    protected int xVel = 0;
+    protected int yVel = 0;
+    protected char dir;
+    protected boolean neutralised = false;
+
+    public Projectile(int xPx, int yPx, char dir, Level g) {
+        this.currentLevel = g;
+        this.xPx = xPx;
+        this.yPx = yPx;
+        this.dir = dir;
+        setVelocity(dir);
+    }
+
+    /**
+     * Returns the neutralised status of projectile.
+     * @return True if projectile is neutralised, else returns false.
+     */
+    public boolean isNeutralised() {
+        return this.neutralised;
+    }
+
+    /**
+     * Halts Projectile movement, setting x and y velocities to 0.
+     */
+    public void stop() {
+        xVel = 0;
+        yVel = 0;
+    }
+
+    /**
+     * Boolean checker that returns whether projectile collided with unbroken walls.
+     * Checks existence of Wall object in its location index relative to the Sprite centre.
+     * @return If wall exists, returns true if and only if Wall is broken, else return false.
+     */
+    public boolean checkWallCollision() {
+        return !currentLevel.canWalk(getIndex(xPx + xOffset, yPx + yOffset));
+    }
+
+    /**
+     * Sets the x or y velocity values based on the direction of projectile.
+     * @param dir Only 'U', 'D', 'L', 'R' directions accepted; anything else is an illegal state.
+     * @throws IllegalArgumentException Whenever any char parameter does not represent a direction.
+     */
+    private void setVelocity(char dir) throws IllegalArgumentException {
+        switch (dir) {
+            case 'L':
+                xVel = -speed;
+                break;
+            case 'R':
+                xVel = speed;
+                break;
+            case 'U':
+                yVel = -speed;
+                break;
+            case 'D':
+                yVel = speed;
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Invalid char %c for projectile direction", dir));
+        }
+    }
 }
