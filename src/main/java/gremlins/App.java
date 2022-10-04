@@ -122,10 +122,14 @@ public class App extends PApplet {
      */
     @Override
     public void keyReleased(){
-        if (keyCode == UP || keyCode == DOWN)
-            currentPlayer.yStop();
-        else if (keyCode == LEFT || keyCode == RIGHT)
-            currentPlayer.xStop();
+        if (keyCode == UP)
+            currentPlayer.upStop();
+        else if (keyCode == DOWN)
+            currentPlayer.downStop();
+        else if (keyCode == LEFT)
+            currentPlayer.leftStop();
+        else if (keyCode == RIGHT)
+            currentPlayer.rightStop();
     }
 
 
@@ -145,7 +149,7 @@ public class App extends PApplet {
             textSize(18);
             text("Lives: ", 90, 685);
 
-            text(String.format("Level %d/%d", level+1, maxLevel), (float)WIDTH/2, 685);
+            text(String.format("Level %d/%d", level, maxLevel), (float)WIDTH/2, 685);
 
             for (int i = 0; i < lives; ++i) {
                 image(wizard[0], 120 + i * 25, 680);

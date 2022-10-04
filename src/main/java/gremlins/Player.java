@@ -47,13 +47,13 @@ public class Player implements Sprite {
 
         // Wall collisions
         if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
-            xStop();
+            xDir = 0;
         if (xVel > 0 && !canMove(getIndex(xPx, yPx) + 1))
-            xStop();
+            xDir = 0;
         if (yVel < 0 && !canMove(getIndex(xPx, yPx) - 36))
-            yStop();
+            yDir = 0;
         if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36))
-            yStop();
+            yDir = 0;
 
         if (xPx == xTarget && yPx == yTarget) {
             // Stop on square
@@ -118,7 +118,7 @@ public class Player implements Sprite {
     public void left() {
         dir = 'L';
         if (canMove(getIndex(xTarget, yTarget) - 1)) {
-            yStop();
+            yDir = 0;
             xDir = -1;
         }
     }
@@ -129,7 +129,7 @@ public class Player implements Sprite {
     public void right() {
         dir = 'R';
         if (canMove(getIndex(xTarget, yTarget) + 1)) {
-            yStop();
+            yDir = 0;
             xDir = 1;
         }
     }
@@ -140,7 +140,7 @@ public class Player implements Sprite {
     public void up() {
         dir = 'U';
         if (canMove(getIndex(xTarget, yTarget) - 36)) {
-            xStop();
+            xDir = 0;
             yDir = -1;
         }
     }
@@ -151,23 +151,43 @@ public class Player implements Sprite {
     public void down() {
         dir = 'D';
         if (canMove(getIndex(xTarget, yTarget) + 36)) {
-            xStop();
+            xDir = 0;
             yDir = 1;
         }
     }
 
+    /* CHANGE XSTOP AND YSTOP TO LEFT/RIGHT STOP AND UP/DOWN STOP */
+
     /**
-     * Sets x movement primer to 0, keeping player movement until it is positioned in an exact tile.
+     * Sets x movement primer to 0 if moving left, keeping player movement until it is positioned in an exact tile.
      */
-    public void xStop() {
-        xDir = 0;
+    public void leftStop() {
+        if (xDir == -1)
+            xDir = 0;
     }
 
     /**
-     * Sets y movement primer to 0, keeping player movement until it is positioned in an exact tile.
+     * Sets x movement primer to 0 if moving right, keeping player movement until it is positioned in an exact tile.
      */
-    public void yStop() {
-        yDir = 0;
+    public void rightStop() {
+        if (xDir == 1)
+            xDir = 0;
+    }
+
+    /**
+     * Sets y movement primer to 0 if moving up, keeping player movement until it is positioned in an exact tile.
+     */
+    public void upStop() {
+        if (yDir == -1)
+            yDir = 0;
+    }
+
+    /**
+     * Sets y movement primer to 0 if moving down, keeping player movement until it is positioned in an exact tile.
+     */
+    public void downStop() {
+        if (yDir == 1)
+            yDir = 0;
     }
 
     /**
@@ -207,8 +227,8 @@ public class Player implements Sprite {
     @Override
     public void reset() {
         SetPosition(xOrigin, yOrigin);
-        xStop();
-        yStop();
+        xDir = 0;
+        yDir = 0;
     }
 
     /**
