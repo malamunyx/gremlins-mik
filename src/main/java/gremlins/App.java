@@ -272,7 +272,7 @@ public class App extends PApplet {
         }
         try {
             return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8.toString()));
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | NullPointerException e) {
             throw new RuntimeException("Could not locate resource file path for " + filename);
         }
     }
