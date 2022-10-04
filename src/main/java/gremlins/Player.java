@@ -47,13 +47,13 @@ public class Player implements Sprite {
 
         // Wall collisions
         if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
-            xDir = 0;
+            leftStop();
         if (xVel > 0 && !canMove(getIndex(xPx, yPx) + 1))
-            xDir = 0;
+            rightStop();
         if (yVel < 0 && !canMove(getIndex(xPx, yPx) - 36))
-            yDir = 0;
+            upStop();
         if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36))
-            yDir = 0;
+            downStop();
 
         if (xPx == xTarget && yPx == yTarget) {
             // Stop on square
