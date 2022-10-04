@@ -218,6 +218,7 @@ public class AppClassTest {
         assertThat(na.getLives()).isEqualTo(0);
     }
 
+    // Pretty unstable test...
     @Test
     public void GameWinScreenWhenAllLevelsCompleted() {
         int moveX = (1147 % 36) * 20;
@@ -228,7 +229,7 @@ public class AppClassTest {
         PApplet.runSketch(new String[] { "App" }, na);
         na.setup();
         na.setGameLevel(2); // SET TO LEVEL 2.
-        na.delay(800);
+        na.delay(1000);
 
         na.getCurrentLevel().getPlayer().SetPosition(moveX, moveY);
 
