@@ -141,7 +141,15 @@ public class App extends PApplet {
         fill(0);
         textAlign(CENTER, CENTER);
 
-        if (lives > 0) {
+        if (level > maxLevel) { // Condition for Game win
+                noLoop();
+                endGameScreen("YOU WIN", 0, 255, 0);
+        }
+        else if (lives <= 0){ // Condition for Game lost.
+            noLoop();
+            endGameScreen("YOU LOSE", 255, 0, 0);
+        }
+        else { // Normal conditions
             currentLevel.draw(this);
             textSize(12);
             text((int)frameRate, 25, 10);
@@ -156,17 +164,11 @@ public class App extends PApplet {
             }
 
             if (currentLevel.playerWin()) {
-                if (++level <= maxLevel) { // Level up
-                    currentLevel = loadLevel(level);
-                    currentPlayer = currentLevel.getPlayer();
-                } else { // Game win
-                    noLoop();
-                    endGameScreen("YOU WIN", 0, 255, 0);
+                ++level;
+                if (level <= maxLevel) { // Level up
+                    setGameLevel(level);
                 }
             }
-        } else {
-            noLoop();
-            endGameScreen("YOU LOSE", 255, 0, 0);
         }
     }
 
@@ -253,13 +255,6 @@ public class App extends PApplet {
     }
 
     /**
-     *
-     * @param filename Image filename in the resources folder.
-     * @return PImage variable representing images for the Processing library to handle.
-     * @throws RuntimeException Indication that image file is unable to be located in resources folder.
-     */
-
-    /**
      * Returns Processing PImage variable of the associated image resource.
      * @param filename Image filename in the resources folder.
      * @return PImage variable representing images for the Processing library to handle.
@@ -297,6 +292,27 @@ public class App extends PApplet {
      */
     public int getMaxLevel() {
         return maxLevel;
+    }
+
+    /**
+     * Getter method for currentLevel object.
+     * @return Reference to Level object associated with the current level number.
+     */
+    public Level getCurrentLevel() {
+        return currentLevel;
+    }
+
+    /**
+     * Sets level to desired level, changing currentLevel and currentPlayer objects.
+     * @param level Level number.
+     */
+    public void setGameLevel(int level) {
+        if (level > this.getMaxLevel() || level <= 0)
+            throw new IndexOutOfBoundsException("Level parameter out of bounds");
+
+        this.level = level;
+        this.currentLevel = loadLevel(level);
+        this.currentPlayer = LoadCurrentPlayer(currentLevel);
     }
 
     public static void main(String[] args) {
