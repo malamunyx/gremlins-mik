@@ -3,8 +3,7 @@ package gremlins;
 import processing.core.PImage;
 
 public interface Sprite {
-    final static int xOffset = 9;
-    final static int yOffset = 9;
+    int Offset = 9;
     static Player playerFactory(int xPx, int yPx, Level g) {
         return new Player(xPx, yPx, g);
     }

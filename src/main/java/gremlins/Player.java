@@ -213,7 +213,7 @@ public class Player extends LiveEntity implements Sprite {
      */
     @Override
     public int getCentreX() {
-        return this.xPx + Sprite.xOffset;
+        return this.xPx + Sprite.Offset;
     }
 
     /**
@@ -222,7 +222,7 @@ public class Player extends LiveEntity implements Sprite {
      */
     @Override
     public int getCentreY() {
-        return this.yPx + Sprite.yOffset;
+        return this.yPx + Sprite.Offset;
     }
 
     /**
