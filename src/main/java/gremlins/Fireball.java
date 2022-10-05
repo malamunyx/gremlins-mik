@@ -2,7 +2,7 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Fireball extends Projectile implements Sprite{
+public class Fireball extends Projectile {
     public Fireball(int xPx, int yPx, char dir, Level g) {
         super(xPx, yPx, dir, g);
     }
@@ -12,6 +12,7 @@ public class Fireball extends Projectile implements Sprite{
      * @param a App that extends Processing Applet handling all Processing library processes.
      * @param img PImage variable stored in App class.
      */
+    @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
 
@@ -40,43 +41,6 @@ public class Fireball extends Projectile implements Sprite{
         } else {
             return false;
         }
-    }
-
-    /**
-     * Returns integer location index based on Sprite pixel position.
-     * @param xPx Horizontal pixel position.
-     * @param yPx Vertical pixel position.
-     * @return Integer index of ho location.
-     */
-    @Override
-    public int getIndex(int xPx, int yPx) {
-        return (xPx / 20) + 36 * (yPx / 20);
-    }
-
-    /**
-     * Return the horizontal pixel position of the Sprite centre.
-     * @return Integer x plane pixel position.
-     */
-    @Override
-    public int getCentreX() {
-        return this.xPx + Sprite.xOffset;
-    }
-
-    /**
-     * Return the vertical pixel position of the Sprite centre.
-     * @return Integer y plane pixel position.
-     */
-    @Override
-    public int getCentreY() {
-        return this.yPx + Sprite.xOffset;
-    }
-
-    /**
-     * Marks the Fireball projectile as neutralised, hence allowed for deletion in the next frame.
-     */
-    @Override
-    public void reset() {
-        this.neutralised = true;
     }
 }
 

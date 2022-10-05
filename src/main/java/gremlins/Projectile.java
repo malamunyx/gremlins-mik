@@ -1,6 +1,8 @@
 package gremlins;
 
-public abstract class Projectile implements Sprite{
+import processing.core.PImage;
+
+public abstract class Projectile implements Sprite {
     protected Level currentLevel;
     protected static final int speed = 4;
 
@@ -11,13 +13,73 @@ public abstract class Projectile implements Sprite{
     protected char dir;
     protected boolean neutralised = false;
 
-    public Projectile(int xPx, int yPx, char dir, Level g) {
-        this.currentLevel = g;
+    public Projectile(int xPx, int yPx, char dir, Level l) {
+        this.currentLevel = l;
         this.xPx = xPx;
         this.yPx = yPx;
         this.dir = dir;
         setVelocity(dir);
     }
+
+
+    /* SPRITE FUNCTIONS */
+
+    /**
+     * Calls app to draw projectile.
+     * @param a App that extends Processing Applet handling all Processing library processes.
+     * @param img PImage variable stored in App class.
+     */
+    @Override
+    public abstract void update(App a, PImage img);
+
+    /**
+     * Boolean checker that returns whether collision with Sprite object occurs.
+     * @param s Objects implementing Sprite interface.
+     * @return True whenever Sprites instances of specific objects have x and y distances less than sprite size (20 pixels).
+     */
+    @Override
+    public abstract boolean spriteCollision(Sprite s);
+
+    /**
+     * Marks the Projectile as neutralised, hence allowed for deletion in the next frame.
+     */
+    @Override
+    public void reset() {
+        this.neutralised = true;
+        stop();
+    }
+
+    /**
+     * Returns integer location index based on Sprite pixel position.
+     * @param xPx Horizontal pixel position.
+     * @param yPx Vertical pixel position.
+     * @return Integer index of ho location.
+     */
+    @Override
+    public int getIndex(int xPx, int yPx) {
+        return (xPx / 20) + 36 * (yPx / 20);
+    }
+
+    /**
+     * Return the central horizontal pixel position of the Sprite centre.
+     * @return Integer x plane pixel position.
+     */
+    @Override
+    public int getCentreX() {
+        return this.xPx + Sprite.xOffset;
+    }
+
+    /**
+     * Return the central vertical pixel position of the Sprite centre.
+     * @return Integer y plane pixel position.
+     */
+    @Override
+    public int getCentreY() {
+        return this.yPx + Sprite.xOffset;
+    }
+
+
+    /* PROJECTILE FUNCTIONS */
 
     /**
      * Returns the neutralised status of projectile.

@@ -22,10 +22,9 @@ public interface Sprite {
     }
 
     void update(App a, PImage img);
+    boolean spriteCollision(Sprite s);
 
     int getIndex(int x, int y);
-
-    boolean spriteCollision(Sprite s);
 
     int getCentreX();
     int getCentreY();
