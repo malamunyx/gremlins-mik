@@ -225,11 +225,11 @@ public class AppClassTest {
         int moveY = (1147 / 36) * 20;
         App na = new App();
 
-        na.loop();
+        //na.loop();
         PApplet.runSketch(new String[] { "App" }, na);
         na.setup();
         na.setGameLevel(2); // SET TO LEVEL 2.
-        na.delay(1000);
+        //na.delay(1000);
 
         na.getCurrentLevel().getPlayer().SetPosition(moveX, moveY);
 
