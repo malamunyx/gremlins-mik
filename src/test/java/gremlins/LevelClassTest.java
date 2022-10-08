@@ -59,7 +59,7 @@ public class LevelClassTest {
     @Test
     public void getEmptyTileIsNull() {
         Level lt = Level.generateLevel(new File(fname), wz_cd, en_cd);
-        assertThat(lt.getTile(37))
+        assertThat(lt.getTile(39))
                 .isNull();
     }
 
@@ -134,7 +134,7 @@ public class LevelClassTest {
     public void GetRandomNumberIsWithinBounds() {
         Level lt = Level.generateLevel(new File(fname), wz_cd, en_cd);
         int bound = 5;
-        assertThat(lt.getRandomInt(bound)).isGreaterThanOrEqualTo(0).isLessThan(bound);
+        assertThat(Level.rg.nextInt(bound)).isGreaterThanOrEqualTo(0).isLessThan(bound);
     }
 
     /* Player Win Testing */
