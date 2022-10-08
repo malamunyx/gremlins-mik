@@ -36,6 +36,16 @@ public abstract class Tile {
         return new Exit(xPx, yPx);
     }
 
+    /**
+     * Factory method that calls derived Powerup Class constructor to produce a Powerup tile.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @return Instantiated Tile object - Powerup tile.
+     */
+    public static Powerup powerupFactory(int xPx, int yPx) {
+        return new Powerup(xPx, yPx);
+    }
+
     public Tile(int xPx, int yPx) {
         this.xPx = xPx;
         this.yPx = yPx;

@@ -4,16 +4,24 @@ import processing.core.PImage;
 
 public class Player extends LiveEntity implements Sprite {
     private static final int speed = 2;
+    private int playerSpeed;
     private int charge;
     private int xDir = 0;
     private int yDir = 0;
 
-//    private char dir = 'L';
+    private boolean powerupEffective;
+    private int powerupCooldown;
 
     public Player(int xPx, int yPx, Level g) {
         super(xPx, yPx, g);
-        this.charge = g.wizardCooldown;
+        playerSpeed = speed;
         this.dir = 'L';
+
+        this.charge = g.wizardCooldown;
+
+        powerupEffective = false;
+        powerupCooldown = App.FPS * App.POWERUPTIME;
+
     }
 
     /**
@@ -29,6 +37,17 @@ public class Player extends LiveEntity implements Sprite {
         // RECHARGE COOLDOWN
         if (charge < currentLevel.wizardCooldown)
             ++charge;
+
+        // POWERUP COOLDOWN
+        if (powerupEffective) {
+            --powerupCooldown;
+            a.text(String.format("SPEED UP: %d", powerupCooldown / App.FPS), 450, 685);
+        }
+        if (powerupCooldown == 0) {
+            powerupEffective = false;
+            powerupCooldown = App.FPS * App.POWERUPTIME;
+            playerSpeed = speed;
+        }
 
         // Wall collisions
         if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
@@ -46,10 +65,10 @@ public class Player extends LiveEntity implements Sprite {
             yVel = 0;
             if (xDir != 0) {
                 xTarget += xDir * App.SPRITESIZE;
-                xVel += xDir * speed;
+                xVel += xDir * playerSpeed;
             } else if (yDir != 0) {
                 yTarget += yDir * App.SPRITESIZE;
-                yVel += yDir * speed;
+                yVel += yDir * playerSpeed;
             }
         } else {
             // Move towards target.
@@ -203,6 +222,7 @@ public class Player extends LiveEntity implements Sprite {
     @Override
     public void reset() {
         SetPosition(xOrigin, yOrigin);
+        playerSpeed = speed;
         xDir = 0;
         yDir = 0;
     }
@@ -236,5 +256,10 @@ public class Player extends LiveEntity implements Sprite {
         this.yPx = yPx;
         this.xTarget = xPx;
         this.yTarget = yPx;
+    }
+
+    public void SpeedPowerup(int speed) {
+        playerSpeed = speed;
+        powerupEffective = true;
     }
 }
