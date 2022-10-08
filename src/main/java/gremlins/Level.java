@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Level {
-    private Random rg = new Random();
+    public static final Random rg = new Random();
     int wizardCooldown;
     int enemyCooldown;
     private Player player;
@@ -34,6 +34,8 @@ public class Level {
         a.background(211);
         updateMap(a);
         updateSprites(a);
+        // CHECK FOR POWERUP LOCATION :)
+        updatePowerup();
     }
 
     /**
@@ -49,6 +51,8 @@ public class Level {
                     t.draw(a, a.stonewall);
             } else if (t instanceof Exit) {
                 t.draw(a, a.door);
+            } else if (t instanceof Powerup) {
+                t.draw(a, a.podium);
             }
         }
     }
@@ -153,6 +157,20 @@ public class Level {
         }
     }
 
+
+    public void updatePowerup() {
+        if (playerReceivePowerup()) {
+            player.SpeedPowerup(4);
+            ((Powerup)getTile(player.getIndex(player.getCentreX(), player.getCentreY()))).intervalInitiate();
+        }
+    }
+
+    public boolean playerReceivePowerup() { // location equivalency
+        Tile pu = getTile(player.getIndex(player.getCentreX(), player.getCentreY()));
+        return (pu instanceof Powerup &&
+                ((Powerup) pu).canEffectPlayer()); // And player check if it doesnt have powerup
+    }
+
     /**
      * Returns boolean to determine whether the player object has beat the level.
      * @return Boolean variable whether Player object touched the exit door.
@@ -201,6 +219,9 @@ public class Level {
                             break;
                         case 'E':
                             tileMap.put(hashIdx, Tile.exitTileFactory(j*20, i*20));
+                            break;
+                        case 'P':
+                            tileMap.put(hashIdx, Tile.powerupFactory(j * 20, i*20));
                             break;
                         case 'G':
                            addSprite(Sprite.gremlinFactory(j*20, i*20, this));

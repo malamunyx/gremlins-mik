@@ -107,7 +107,7 @@ public class Gremlin extends LiveEntity implements Sprite {
     public void reset() {
         int sIdx;
         do {
-            sIdx = currentLevel.getRandomInt(33 * 36);
+            sIdx = Level.rg.nextInt(33 * 36);
             xPx = (sIdx % 36) * 20;
             yPx = (sIdx / 36) * 20;
         } while (!currentLevel.canWalk(sIdx) || !greaterTenRadius(currentLevel.getPlayer()));
@@ -198,7 +198,7 @@ public class Gremlin extends LiveEntity implements Sprite {
             else if (dir == 'D')
                 choices.remove(getIdxInList(choices, 'U'));
         }
-        return choices.get(currentLevel.getRandomInt(choices.size()));
+        return choices.get(Level.rg.nextInt(choices.size()));
     }
 
     /**
