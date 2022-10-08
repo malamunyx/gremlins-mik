@@ -224,17 +224,16 @@ public class AppClassTest {
         int moveX = (1147 % 36) * 20;
         int moveY = (1147 / 36) * 20;
         App na = new App();
+        na.configPath = "singleLevelConfig.json";
 
-        //na.loop();
+        na.loop();
         PApplet.runSketch(new String[] { "App" }, na);
         na.setup();
-        na.setGameLevel(2); // SET TO LEVEL 2.
-        //na.delay(1000);
-
+        na.delay(500);
         na.getCurrentLevel().getPlayer().SetPosition(moveX, moveY);
 
         na.delay(1000);
-        assertThat(na.getLevel()).isEqualTo(3);
+        assertThat(na.getLevel()).isEqualTo(na.getMaxLevel() + 1);
     }
 
     /* Level Up */
@@ -253,6 +252,6 @@ public class AppClassTest {
         assertThat(na.getCurrentLevel().playerWin()).isTrue();
 
         na.delay(1000);
-        assertThat(na.getLevel()).isEqualTo(2);
+        assertThat(na.getLevel()).isEqualTo(na.getMaxLevel() + 1);
     }
 }
