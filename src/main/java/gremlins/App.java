@@ -15,6 +15,7 @@ public class App extends PApplet {
     public static final int HEIGHT = 720;
     public static final int SPRITESIZE = 20;
     public static final int BOTTOMBAR = 60;
+    public static final int POWERUPTIME = 10;
 
     public static final int FPS = 60;
 
@@ -30,6 +31,7 @@ public class App extends PApplet {
     public PImage fireball;
     public PImage speedboots;
     public PImage door;
+    public PImage podium;
 
     private int lives;
     private int level;
@@ -58,6 +60,7 @@ public class App extends PApplet {
 
         // Load images during setup
         this.door = getImage("door.png");
+        this.podium = getImage("podium.png");
         this.stonewall = getImage("stonewall.png");
         this.brickwall[0] = getImage("brickwall.png");
         this.brickwall[1] = getImage("brickwall_destroyed0.png");
