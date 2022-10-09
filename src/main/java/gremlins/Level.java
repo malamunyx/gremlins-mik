@@ -160,15 +160,17 @@ public class Level {
 
     public void updatePowerup() {
         if (playerReceivePowerup()) {
-            player.SpeedPowerup(4);
-            ((Powerup)getTile(player.getIndex(player.getCentreX(), player.getCentreY()))).intervalInitiate();
+            player.setSpeed(4);
+            player.setPowerupActive(true);
+            ((Powerup)getTile(player.getIndex(player.getCentreX(), player.getCentreY()))).resetPowerup();
         }
     }
 
     public boolean playerReceivePowerup() { // location equivalency
         Tile pu = getTile(player.getIndex(player.getCentreX(), player.getCentreY()));
         return (pu instanceof Powerup &&
-                ((Powerup) pu).canEffectPlayer()); // And player check if it doesnt have powerup
+                ((Powerup) pu).canEffectPlayer() &&
+                !player.hasPowerup());
     }
 
     /**
@@ -265,6 +267,8 @@ public class Level {
         for (Tile t : tileMap.values()) {
             if (t instanceof Wall && ((Wall) t).isBroken()) {
                 ((Wall) t).unbreakWall();
+            } else if (t instanceof Powerup) {
+                ((Powerup) t).resetPowerup();
             }
         }
         for (Sprite s : sprites) { // neutralises Projectiles and resets gremlins to origin.

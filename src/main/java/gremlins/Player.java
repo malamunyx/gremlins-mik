@@ -9,7 +9,7 @@ public class Player extends LiveEntity implements Sprite {
     private int xDir = 0;
     private int yDir = 0;
 
-    private boolean powerupEffective;
+    private boolean powerupActive;
     private int powerupCooldown;
 
     public Player(int xPx, int yPx, Level g) {
@@ -19,7 +19,7 @@ public class Player extends LiveEntity implements Sprite {
 
         this.charge = g.wizardCooldown;
 
-        powerupEffective = false;
+        powerupActive = false;
         powerupCooldown = App.FPS * App.POWERUPTIME;
 
     }
@@ -32,21 +32,26 @@ public class Player extends LiveEntity implements Sprite {
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
-        a.rect(600, 680, ((float)charge / currentLevel.wizardCooldown)*100, 5);
+
+        // Fireball cooldown bar
+        if (charge == currentLevel.wizardCooldown)
+            a.fill(0, 255, 0);
+        else
+            a.fill(47);
+        a.rect(570, 675, ((float)charge / currentLevel.wizardCooldown)*130, 8);
 
         // RECHARGE COOLDOWN
         if (charge < currentLevel.wizardCooldown)
             ++charge;
 
         // POWERUP COOLDOWN
-        if (powerupEffective) {
+        if (powerupActive) {
+            a.fill(0, 0, 255);
+            a.rect(570, 695,  ((float)powerupCooldown / (App.FPS * App.POWERUPTIME))*130, 8);
             --powerupCooldown;
-            a.text(String.format("SPEED UP: %d", powerupCooldown / App.FPS), 450, 685);
         }
         if (powerupCooldown == 0) {
-            powerupEffective = false;
-            powerupCooldown = App.FPS * App.POWERUPTIME;
-            playerSpeed = speed;
+            endSpeedPowerup();
         }
 
         // Wall collisions
@@ -225,6 +230,7 @@ public class Player extends LiveEntity implements Sprite {
         playerSpeed = speed;
         xDir = 0;
         yDir = 0;
+        endSpeedPowerup();
     }
 
     /**
@@ -258,8 +264,36 @@ public class Player extends LiveEntity implements Sprite {
         this.yTarget = yPx;
     }
 
-    public void SpeedPowerup(int speed) {
+    /**
+     * Sets the player speed to desired integer amount.
+     * @param speed speed in pixels per frame.
+     */
+    public void setSpeed(int speed) {
         playerSpeed = speed;
-        powerupEffective = true;
+    }
+
+    /**
+     * Sets the player powerupActive variable.
+     * @param b boolean variable.
+     */
+    public void setPowerupActive(boolean b) {
+        powerupActive = b;
+    }
+
+    /**
+     * Resets any speed powerup effects to original state.
+     */
+    public void endSpeedPowerup() {
+        setPowerupActive(false);
+        setSpeed(speed);
+        powerupCooldown = App.FPS * App.POWERUPTIME;
+    }
+
+    /**
+     * Returns whether player has a powerup or not.
+     * @return true if player has an active power up, else false.
+     */
+    public boolean hasPowerup() {
+        return this.powerupActive;
     }
 }
