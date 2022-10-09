@@ -252,6 +252,6 @@ public class AppClassTest {
         assertThat(na.getCurrentLevel().playerWin()).isTrue();
 
         na.delay(1000);
-        assertThat(na.getLevel()).isEqualTo(na.getMaxLevel() + 1);
+        assertThat(na.getLevel()).isEqualTo(2);
     }
 }
