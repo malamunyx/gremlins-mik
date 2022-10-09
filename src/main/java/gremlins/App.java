@@ -32,6 +32,9 @@ public class App extends PApplet {
     public PImage speedboots;
     public PImage door;
     public PImage podium;
+    public PImage feather;
+    public PImage mana;
+
 
     private int lives;
     private int level;
@@ -78,6 +81,8 @@ public class App extends PApplet {
         this.fireball = getImage("fireball.png");
 
         this.speedboots = getImage("speedboots.png");
+        this.feather = getImage("feather.png");
+        this.mana = getImage("mana.png");
 
         // Always start at first level, hence first index of JSONArray.
         gameSetup();

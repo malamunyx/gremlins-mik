@@ -34,6 +34,7 @@ public class Player extends LiveEntity implements Sprite {
         a.image(img, xPx, yPx);
 
         // Fireball cooldown bar
+        a.image(a.mana, 550, 671);
         if (charge == currentLevel.wizardCooldown)
             a.fill(0, 255, 0);
         else
@@ -46,6 +47,7 @@ public class Player extends LiveEntity implements Sprite {
 
         // POWERUP COOLDOWN
         if (powerupActive) {
+            a.image(a.feather, 550, 691);
             a.fill(0, 0, 255);
             a.rect(570, 695,  ((float)powerupCooldown / (App.FPS * App.POWERUPTIME))*130, 8);
             --powerupCooldown;
