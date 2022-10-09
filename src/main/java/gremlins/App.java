@@ -146,6 +146,7 @@ public class App extends PApplet {
     public void draw() {
         fill(0);
         textAlign(CENTER, CENTER);
+        noStroke(); // Stylistic feature.
 
         if (level > maxLevel) { // Condition for Game win
                 noLoop();
@@ -157,6 +158,8 @@ public class App extends PApplet {
         }
         else { // Normal conditions
             currentLevel.draw(this);
+
+            fill(0);
             textSize(12);
             text((int)frameRate, 25, 10);
 
