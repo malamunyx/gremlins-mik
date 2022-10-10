@@ -16,6 +16,7 @@ public class App extends PApplet {
     public static final int SPRITESIZE = 20;
     public static final int BOTTOMBAR = 60;
     public static final int POWERUPTIME = 10;
+    public static final int FREEZETIME = 10;
 
     public static final int FPS = 60;
 
@@ -34,6 +35,9 @@ public class App extends PApplet {
     public PImage podium;
     public PImage feather;
     public PImage mana;
+    public PImage iceball;
+    public PImage icemana;
+
 
 
     private int lives;
@@ -79,10 +83,12 @@ public class App extends PApplet {
         this.wizard[2] = getImage("wizard2.png");
         this.wizard[3] = getImage("wizard3.png");
         this.fireball = getImage("fireball.png");
+        this.iceball = getImage("iceball.png");
 
         this.speedboots = getImage("speedboots.png");
         this.feather = getImage("feather.png");
         this.mana = getImage("mana.png");
+        this.icemana = getImage("icemana.png");
 
         // Always start at first level, hence first index of JSONArray.
         gameSetup();
@@ -125,7 +131,10 @@ public class App extends PApplet {
 
         if (keyCode == 32) {
             currentPlayer.fire();
+        } else if (keyCode == 87) {
+            currentPlayer.fireIceball();
         }
+
     }
 
     /**

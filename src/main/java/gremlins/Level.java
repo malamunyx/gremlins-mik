@@ -115,7 +115,7 @@ public class Level {
 
             if (s1 instanceof Gremlin) {
                 s1.update(a, a.gremlin);
-                if (a.frameCount % (enemyCooldown) == 0)
+                if (a.frameCount % (enemyCooldown) == 0 && !((Gremlin)s1).isFrozen())
                     ((Gremlin) s1).fire();
             }
             else if (s1 instanceof Player)
@@ -124,17 +124,24 @@ public class Level {
                 s1.update(a, a.fireball);
             else if (s1 instanceof Slime) {
                 s1.update(a, a.slime);
+            } else if (s1 instanceof Iceball) {
+                s1.update(a, a.iceball);
             }
         }
 
-        // check collisions
+        // check collisions --> Please make a collision engine class.
         for (int i = sprites.size()-1; i >= 0; --i) {
             Sprite s1 = sprites.get(i);
 
             for (int j = sprites.size()-1; j >= 0; --j) {
                 Sprite s2 = sprites.get(j);
                 if (i != j && s1.spriteCollision(s2)) {
-                    if (s1 instanceof Player || s2 instanceof Player) {
+                    // SPECIAL CASE FOR ICE BALL AND GREMLIN
+                    if (s1 instanceof Iceball && s2 instanceof Gremlin) {
+                        // Freeze s2. s1 resets.
+                        s1.reset();
+                        ((Gremlin) s2).freeze();
+                    } else if (s1 instanceof Player || s2 instanceof Player) {
                         // calls levelReset, and decrease lives by 1.
                         resetLevel();
                         a.playerDeath();

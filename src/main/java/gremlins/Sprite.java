@@ -16,6 +16,10 @@ public interface Sprite {
         return new Fireball(xPx, yPx, dir, g);
     }
 
+    static Iceball iceballFactory(int xPx, int yPx, char dir, Level g) {
+        return new Iceball(xPx, yPx, dir, g);
+    }
+
     static Slime slimeFactory(int xPx, int yPx, char dir, Level g) {
         return new Slime(xPx, yPx, dir, g);
     }

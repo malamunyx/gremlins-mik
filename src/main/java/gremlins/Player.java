@@ -6,6 +6,7 @@ public class Player extends LiveEntity implements Sprite {
     private static final int speed = 2;
     private int playerSpeed;
     private int charge;
+    private int iceCharge;
     private int xDir = 0;
     private int yDir = 0;
 
@@ -18,6 +19,7 @@ public class Player extends LiveEntity implements Sprite {
         this.dir = 'L';
 
         this.charge = g.wizardCooldown;
+        this.iceCharge = g.wizardCooldown;
 
         powerupActive = false;
         powerupCooldown = App.FPS * App.POWERUPTIME;
@@ -32,24 +34,37 @@ public class Player extends LiveEntity implements Sprite {
     @Override
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
+        a.textSize(10);
+        a.text("[SPC]", 530, 670);
+        a.image(a.mana, 550, 665);
+        a.text("[ W ]", 530, 687);
+        a.image(a.icemana, 550, 681);
 
         // Fireball cooldown bar
-        a.image(a.mana, 550, 671);
         if (charge == currentLevel.wizardCooldown)
             a.fill(0, 255, 0);
         else
             a.fill(47);
-        a.rect(570, 675, ((float)charge / currentLevel.wizardCooldown)*130, 8);
+        a.rect(570, 669, ((float)charge / currentLevel.wizardCooldown)*130, 8);
+
+        // Iceball cooldown bar
+        if (iceCharge == currentLevel.wizardCooldown)
+            a.fill(0, 255, 0);
+        else
+            a.fill(47);
+        a.rect(570, 685, ((float)iceCharge / currentLevel.wizardCooldown)*130, 8);
 
         // RECHARGE COOLDOWN
         if (charge < currentLevel.wizardCooldown)
             ++charge;
+        if (iceCharge < currentLevel.wizardCooldown)
+            ++iceCharge;
 
         // POWERUP COOLDOWN
         if (powerupActive) {
-            a.image(a.feather, 550, 691);
+            a.image(a.feather, 550, 697);
             a.fill(0, 0, 255);
-            a.rect(570, 695,  ((float)powerupCooldown / (App.FPS * App.POWERUPTIME))*130, 8);
+            a.rect(570, 701,  ((float)powerupCooldown / (App.FPS * App.POWERUPTIME))*130, 8);
             --powerupCooldown;
         }
         if (powerupCooldown == 0) {
@@ -297,5 +312,12 @@ public class Player extends LiveEntity implements Sprite {
      */
     public boolean hasPowerup() {
         return this.powerupActive;
+    }
+
+    public void fireIceball() {
+        if (iceCharge == currentLevel.wizardCooldown) {
+            currentLevel.addSprite(Sprite.iceballFactory(xPx, yPx, dir, currentLevel));
+            iceCharge = 0;
+        }
     }
 }

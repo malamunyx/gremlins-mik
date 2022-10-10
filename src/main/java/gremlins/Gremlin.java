@@ -6,10 +6,15 @@ import java.util.ArrayList;
 
 public class Gremlin extends LiveEntity implements Sprite {
     private static final int speed = 1;
+    private int localSpeed;
     private boolean stopped = true;
+    private boolean frozen = false;
+
+    private int freezeCountdown = App.FPS * App.FREEZETIME;
 
     public Gremlin(int xPx, int yPx, Level g) {
         super(xPx, yPx, g);
+        this.localSpeed = speed;
         this.dir = '\0';
     }
 
@@ -25,6 +30,13 @@ public class Gremlin extends LiveEntity implements Sprite {
         if (!stopped && !canMove(getIndex(xPx, yPx) + getDirNum()))
             stopped = true;
 
+        if (frozen)
+            --freezeCountdown;
+        if (freezeCountdown == 0) {
+            freezeCountdown = App.FPS * App.FREEZETIME;
+            unfreeze();
+        }
+
         if (xPx == xTarget && yPx == yTarget) {
             xVel = 0;
             yVel = 0;
@@ -35,16 +47,16 @@ public class Gremlin extends LiveEntity implements Sprite {
             }
 
             if (dir == 'U') {
-                yVel = -1 * speed;
+                yVel = -1 * localSpeed;
                 yTarget += yVel * App.SPRITESIZE;
             } else if (dir == 'D') {
-                yVel = 1 * speed;
+                yVel = 1 * localSpeed;
                 yTarget += yVel * App.SPRITESIZE;
             } else if (dir == 'L') {
-                xVel = -1 * speed;
+                xVel = -1 * localSpeed;
                 xTarget += xVel * App.SPRITESIZE;
             } else if (dir == 'R') {
-                xVel = 1 * speed;
+                xVel = 1 * localSpeed;
                 xTarget += xVel * App.SPRITESIZE;
             }
         } else {
@@ -199,6 +211,20 @@ public class Gremlin extends LiveEntity implements Sprite {
                 choices.remove(getIdxInList(choices, 'U'));
         }
         return choices.get(Level.rg.nextInt(choices.size()));
+    }
+
+    public void freeze() {
+        localSpeed = 0;
+        frozen = true;
+    }
+
+    public void unfreeze() {
+        localSpeed = speed;
+        frozen = false;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
     }
 
     /**
