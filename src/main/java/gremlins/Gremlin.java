@@ -130,6 +130,7 @@ public class Gremlin extends LiveEntity implements Sprite {
         this.yVel = 0;
         this.xTarget = xPx;
         this.yTarget = yPx;
+        // unfreeze();
     }
 
     /**
@@ -144,7 +145,7 @@ public class Gremlin extends LiveEntity implements Sprite {
         this.yVel = 0;
         this.xTarget = xPx;
         this.yTarget = yPx;
-
+        unfreeze(); // FOR LEVELRESET, EXTENSION CASE
     }
 
     /**
