@@ -163,12 +163,13 @@ public class App extends PApplet {
         noStroke(); // Stylistic feature.
 
         if (level > maxLevel) { // Condition for Game win
-                noLoop();
-                endGameScreen("YOU WIN", 0, 255, 0);
+            endGameScreen("YOU WIN", 0, 255, 0);
+            noLoop();
+
         }
         else if (lives <= 0){ // Condition for Game lost.
-            noLoop();
             endGameScreen("YOU LOSE", 255, 0, 0);
+            noLoop();
         }
         else { // Normal conditions
             currentLevel.draw(this);
