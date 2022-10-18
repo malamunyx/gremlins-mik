@@ -314,10 +314,45 @@ public class Player extends LiveEntity implements Sprite {
         return this.powerupActive;
     }
 
+    /**
+     * Shoot an Iceball projectile, instantiating and storing a projectile in the currentLevel sprites ArrayList.
+     * Checks Player cooldown prior to Iceball object instantiation.
+     */
     public void fireIceball() {
         if (iceCharge == currentLevel.wizardCooldown) {
             currentLevel.addSprite(Sprite.iceballFactory(xPx, yPx, dir, currentLevel));
             iceCharge = 0;
         }
+    }
+
+    /**
+     * Setter for direction char variable, used for testing purposes.
+     * @param c Direction char [L, R, U, D].
+     */
+    public void setDir(char c) {
+        this.dir = c;
+    }
+    /**
+     * Getter for direction char variable, used for testing purposes.
+     * @return Direction char [L, R, U, D].
+     */
+    public char getDir() {
+        return this.dir;
+    }
+
+    /**
+     * Getter for x plane (horizontal) unit vector.
+     * @return integer value for x unit vector.
+     */
+    public int getxDir() {
+        return this.xDir;
+    }
+
+    /**
+     * Getter for y plane (horizontal) unit vector.
+     * @return integer value for y unit vector.
+     */
+    public int getyDir() {
+        return this.yDir;
     }
 }
