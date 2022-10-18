@@ -6,8 +6,8 @@
 ## Techniques Demonstrated
   - JSON Processing
   - Object-Oriented Principles
-  - **[In Progress]** Test-Driven Development with JUnit, AssertJ and JaCoCo
-  - **[In Progress]** Javadoc implementation
+  - Testcase usage with JUnit, AssertJ and JaCoCo
+  - Javadoc implementation
   
 ## Author
 Mikael Sebastian Indrawan
