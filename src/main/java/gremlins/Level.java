@@ -96,15 +96,6 @@ public class Level {
     }
 
     /**
-     * Returns random integer between in range [0, n), utilised mainly for Gremlin directionality.
-     * @param n Integer upper bound (Not inclusive).
-     * @return Randomised integer.
-     */
-    public int getRandomInt(int n) {
-        return rg.nextInt(n);
-    }
-
-    /**
      * Calls the app to draw all sprites. Simultaneously handle sprite collision, and remove any neutralised projectile sprites.
      * @param a App that extends Processing Applet handling all Processing library processes.
      */
@@ -175,9 +166,7 @@ public class Level {
 
     public boolean playerReceivePowerup() { // location equivalency
         Tile pu = getTile(player.getIndex(player.getCentreX(), player.getCentreY()));
-        return (pu instanceof Powerup &&
-                ((Powerup) pu).canEffectPlayer() &&
-                !player.hasPowerup());
+        return (pu instanceof Powerup && ((Powerup) pu).canEffectPlayer() && !player.hasPowerup());
     }
 
     /**
@@ -203,11 +192,11 @@ public class Level {
                 String s = sc.nextLine();
 
                 if (s.length() != 36)
-                    throw new RuntimeException(String.format("Map Specification violation: vertical Dimensions of map must be 36 Tiles, not %d", s.length()));
+                    throw new RuntimeException(String.format("Map Specification violation: horizontal Dimensions of map must be 36 Tiles, not %d", s.length()));
 
                 for (int j = 0; j < s.length(); ++j) {
 
-                    if (i == 0 || i == 32) {
+                    if (i == 0 || (!sc.hasNextLine())) {
                         if (s.charAt(j) != 'X')
                             throw new RuntimeException("Map must be bordered by stonewall");
                     } else if (j == 0 || j == 35) {
@@ -238,14 +227,14 @@ public class Level {
                         case ' ':
                             break;
                         default:
-                            System.err.printf("Invalid tile %c in textfile. [%d][%d]", s.charAt(j), i, j);
+                            System.err.printf("Invalid tile %c ignored in textfile. [%d][%d]", s.charAt(j), i, j);
                     }
                     ++hashIdx;
                 }
                 ++i;
             }
 
-            if (i > 33)
+            if (i != 33)
                 throw new RuntimeException("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not " + i);
 
             if (player == null)
@@ -253,9 +242,7 @@ public class Level {
 
             sc.close();
         } catch (FileNotFoundException e) {
-            System.err.printf("File %s not found%n", levelFile.getName());
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(String.format("File %s not found", levelFile.getName()));
         }
     }
 
