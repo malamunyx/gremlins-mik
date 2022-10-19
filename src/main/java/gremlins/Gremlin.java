@@ -189,7 +189,7 @@ public class Gremlin extends LiveEntity implements Sprite {
      * Checks for unbroken walls around current tile location in search for valid location.
      * @return Random direction char ['U', 'D', 'L', 'R']
      */
-    private Character getRandomDir() {
+    public Character getRandomDir() {
         ArrayList<Character> choices = new ArrayList<>();
         if (currentLevel.canWalk(getIndex(xPx, yPx) - 1))
             choices.add('L');
@@ -200,32 +200,54 @@ public class Gremlin extends LiveEntity implements Sprite {
         if (currentLevel.canWalk(getIndex(xPx, yPx) + 36))
             choices.add('D');
 
-        // If it is not surrounded by walls, remove opposite direction
-        if (choices.size() > 1) {
-            if (dir == 'L')
+        if (choices.isEmpty()) {
+            return '\0';
+        } else if (choices.size() > 1) { // If it is dead end, remove opposite direction
+            if (dir == 'L') {
                 choices.remove(getIdxInList(choices, 'R'));
-            else if (dir == 'R')
+            } else if (dir == 'R') {
                 choices.remove(getIdxInList(choices, 'L'));
-            else if (dir == 'U')
+            } else if (dir == 'U') {
                 choices.remove(getIdxInList(choices, 'D'));
-            else if (dir == 'D')
+            } else if (dir == 'D') {
                 choices.remove(getIdxInList(choices, 'U'));
+            }
         }
         return choices.get(Level.rg.nextInt(choices.size()));
     }
 
+    /**
+     * Freezes the gremlin object.
+     * localSpeed becomes zero and frozen boolean becomes true.
+     */
     public void freeze() {
         localSpeed = 0;
         frozen = true;
     }
 
+    /**
+     * Undo any changes from freezing method.
+     * localSpeed becomes intended speed and frozen boolean becomes false.
+     */
     public void unfreeze() {
         localSpeed = speed;
         frozen = false;
     }
 
+    /**
+     * Getter for frozen boolean variable.
+     * @return true whenever gremlin is frozen.
+     */
     public boolean isFrozen() {
         return frozen;
+    }
+
+    /**
+     * Sets direction character, used for testing purposes.
+     * @param c Character.
+     */
+    public void setDir(char c) {
+        this.dir = c;
     }
 
     /**
