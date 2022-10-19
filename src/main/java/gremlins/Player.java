@@ -341,7 +341,7 @@ public class Player extends LiveEntity implements Sprite {
     }
 
     /**
-     * Getter for x plane (horizontal) unit vector.
+     * Getter for x plane (horizontal) unit vector, used for testing purposes.
      * @return integer value for x unit vector.
      */
     public int getxDir() {
@@ -349,10 +349,18 @@ public class Player extends LiveEntity implements Sprite {
     }
 
     /**
-     * Getter for y plane (horizontal) unit vector.
+     * Getter for y plane (horizontal) unit vector, used for testing purposes.
      * @return integer value for y unit vector.
      */
     public int getyDir() {
         return this.yDir;
+    }
+
+    /**
+     * Getter for magnitude of playerSpeed, used for testing purposes.
+     * @return playerSpeed integer variable.
+     */
+    public int getPlayerSpeed() {
+        return this.playerSpeed;
     }
 }
