@@ -1,6 +1,18 @@
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X                                  X
-X WP                               X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X                                  X
+X             W                    X
 X                                  X
 X                                  X
 X                                  X
@@ -18,16 +30,4 @@ X                                  X
 X                                  X
 X                                  X
 X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-X                                  X
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXBBXXXXXXXXXXXXXXXXXXXX
