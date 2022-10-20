@@ -126,5 +126,82 @@ public class cPlayerTest {
         assertThat(l.getPlayer().getDir()).isEqualTo('D');
     }
 
+    @Test
+    public void testEndSpeedPowerup() {
+        Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
+        l.getPlayer().setSpeed(4);
+        l.getPlayer().setPowerupActive(true); // setting speed
+        assertThat(l.getPlayer().getPlayerSpeed()).isEqualTo(4);
+
+        l.getPlayer().endSpeedPowerup();
+        assertThat(l.getPlayer().hasPowerup()).isFalse();
+    }
+
+    @Test
+    public void testPlayerReset() {
+        Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
+        l.getPlayer().reset();
+        assertThat(l.getPlayer().xPx).isEqualTo(l.getPlayer().xOrigin);
+        assertThat(l.getPlayer().yPx).isEqualTo(l.getPlayer().yOrigin);
+        assertThat(l.getPlayer().getxDir()).isEqualTo(0);
+        assertThat(l.getPlayer().getyDir()).isEqualTo(0);
+        assertThat(l.getPlayer().hasPowerup()).isFalse();
+    }
+
+    @Test
+    public void collisionGremlinSamePositionReturnsTrue() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        Gremlin g = Sprite.gremlinFactory(40,40, l);
+        assertThat(l.getPlayer().spriteCollision(g)).isTrue();
+    }
+
+    @Test
+    public void collisionGremlinDiffPositionReturnsFalse() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        Gremlin g = Sprite.gremlinFactory(40,80, l);
+        assertThat(l.getPlayer().spriteCollision(g)).isFalse();
+    }
+
+    @Test
+    public void collisionSlimeSamePositionReturnsTrue() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        Slime g = Sprite.slimeFactory(40, 40, 'U', l);
+        assertThat(l.getPlayer().spriteCollision(g)).isTrue();
+    }
+
+    @Test
+    public void collisionSlimeDiffPositionReturnsFalse() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        Slime g = Sprite.slimeFactory(40, 80, 'U', l);
+        assertThat(l.getPlayer().spriteCollision(g)).isFalse();
+    }
+
+    /* Fire iceball and fireball testing */
+    @Test
+    public void fireballBeforeRecharge() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        l.getPlayer().fire();
+        l.getPlayer().fire();
+        int n = 0;
+        for (Sprite s : l.getSprites())
+            if (s instanceof Fireball) ++n;
+
+        assertThat(n).isEqualTo(1);
+    }
+
+    @Test
+    public void iceballBeforeRecharge() {
+        Level l = Level.generateLevel(new File("TestLevels/Empty.txt"), 3, 3);
+        l.getPlayer().fireIceball();
+        l.getPlayer().fireIceball();
+        int n = 0;
+        for (Sprite s : l.getSprites())
+            if (s instanceof Iceball) ++n;
+
+        assertThat(n).isEqualTo(1);
+    }
+
+
+
 
 }

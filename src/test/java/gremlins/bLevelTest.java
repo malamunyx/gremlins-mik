@@ -203,17 +203,105 @@ public class bLevelTest {
                 .hasMessage("File thisShouldNotExist.txt not found");
     }
 
-//    @Test
-//    public void LevelFileInvalidTileErrorMessage() {
-//
-//    }
+    @Test
+    public void LoadFileInvalidTileContained() {
+        String configPath = "TestLevels/InvalidTileContained.txt";
+        Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+    }
+
+    @Test
+    public void LoadInvalidBorderBottomThrowsRuntimeException() {
+        String configPath = "TestLevels/InvalidBorderBottom.txt";
+        assertThatThrownBy(() -> {
+            Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Map must be bordered by stonewall");
+    }
+
+    @Test
+    public void LoadInvalidBorderSideThrowsRuntimeException() {
+        String configPath = "TestLevels/InvalidBorderSide.txt";
+        assertThatThrownBy(() -> {
+            Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Map must be bordered by stonewall");
+    }
+
+    /* Reset Level Testing */
+    @Test
+    public void TestLevelReset() {
+        Level lt = Level.generateLevel(new File("TestLevels/BrickFull.txt"), wz_cd, en_cd);
+        Gremlin g = Sprite.gremlinFactory(40, 40, lt);
+        Slime s = Sprite.slimeFactory(40, 40, 'R', lt);
+        Wall bw = (Wall)lt.getTile(73);
+        g.setDir('R');
+        lt.addSprite(g);
+        lt.addSprite(s);
+        bw.breakWall();
+        assertThat(bw.isBroken()).isTrue();
+
+        lt.resetLevel();
+        assertThat(g.xPx).isEqualTo(g.xOrigin);
+        assertThat(g.yPx).isEqualTo(g.yOrigin);
+        assertThat(g.getDirNum()).isEqualTo(0);
+        assertThat(s.isNeutralised()).isTrue();
+        assertThat(bw.isBroken()).isFalse();
+    }
+
+    /* Player-Powerup interaction testing */
+    @Test
+    public void playerReceivePowerupReturnsTrueUponOverlap() {
+        Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
+        Powerup p = (Powerup)lt.getTile(75);
+        p.setCanEffect(true);
+        lt.getPlayer().SetPosition(60, 40);
+        assertThat(lt.playerReceivePowerup()).isTrue();
+    }
+
+    @Test
+    public void playerReceivePowerupReturnsFalseWhenTileCannotEffect() {
+        Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
+        Powerup p = (Powerup)lt.getTile(75);
+        lt.getPlayer().SetPosition(60, 40);
+        assertThat(lt.playerReceivePowerup()).isFalse();
+    }
+
+    @Test
+    public void playerReceivePowerupReturnsFalseWhenPLayerHasPowerup() {
+        Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
+        Powerup p = (Powerup)lt.getTile(75);
+        p.setCanEffect(true);
+        lt.getPlayer().setPowerupActive(true);
+
+        lt.getPlayer().SetPosition(60, 40);
+        assertThat(lt.playerReceivePowerup()).isFalse();
+    }
+
+    @Test
+    public void playerReceivePowerupReturnsFalseNoOverlap() {
+        Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
+        Powerup p = (Powerup)lt.getTile(75);
+        assertThat(lt.playerReceivePowerup()).isFalse();
+    }
 
 
+
+    @Test
+    public void playerPowerupEffectiveWhenUpdatePowerup() {
+        Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
+        Player p = lt.getPlayer();
+        Powerup pu = (Powerup)lt.getTile(75);
+
+        pu.setCanEffect(true);
+
+        p.SetPosition(60, 40);
+        assertThat(lt.playerReceivePowerup()).isTrue();
+
+        lt.updatePowerup();
+        assertThat(lt.getPlayer().hasPowerup()).isTrue();
+    }
 
 }
-/*
-    PLAYER CLASS TESTING
- */
 
 
 /* Update Sprite Testing --> Maybe? Too hard? PApplet */

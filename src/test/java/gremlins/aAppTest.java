@@ -1,6 +1,7 @@
 package gremlins;
 
 import org.junit.jupiter.api.Test;
+import processing.core.PApplet;
 import processing.data.JSONObject;
 
 import java.io.File;
@@ -178,5 +179,188 @@ public class aAppTest {
         assertThat(na.getLives()).isEqualTo(originalLives - 1);
     }
 
+    @Test
+    public void KeyPressedLeft() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = PApplet.LEFT;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getPlayer().getDir()).isEqualTo('L');
+    }
+
+    @Test
+    public void KeyPressedRight() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = PApplet.RIGHT;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getPlayer().getDir()).isEqualTo('R');
+    }
+
+    @Test
+    public void KeyPressedUp() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = PApplet.UP;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getPlayer().getDir()).isEqualTo('U');
+    }
+
+    @Test
+    public void KeyPressedDown() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = PApplet.DOWN;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getPlayer().getDir()).isEqualTo('D');
+    }
+
+    @Test
+    public void KeyPressedFireball() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = 32;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
+    }
+
+    @Test
+    public void KeyPressedIceball() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = 87;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
+    }
+
+    @Test
+    public void KeyPressedUnknownKey() {
+        App na = new App();
+        na.gameSetup();
+        na.keyCode = 0;
+        na.keyPressed();
+        assertThat(na.getCurrentLevel()).isNotNull();
+    }
+
+    @Test
+    public void KeyPressedUnknownKeyNotLooping() {
+        App na = new App();
+        na.gameSetup();
+        na.setGameLevel(2);
+        na.noLoop();
+        na.keyCode = 0;
+        na.keyPressed();
+        assertThat(na.isLooping()).isTrue();
+        assertThat(na.getLevel()).isEqualTo(1);
+    }
+
+    /* Direction stop and keyreleased testing */
+    @Test
+    public void xDirNegativeLeftStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().left();
+
+        na.keyCode = PApplet.LEFT;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getxDir()).isEqualTo(0);
+    }
+
+    @Test
+    public void xDirPositiveLeftStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().right();
+
+        na.keyCode = PApplet.LEFT;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getxDir()).isEqualTo(1);
+    }
+
+    @Test
+    public void xDirNegativeRightStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().left();
+
+        na.keyCode = PApplet.RIGHT;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getxDir()).isEqualTo(-1);
+    }
+
+    @Test
+    public void xDirPositiveRightStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().right();
+
+        na.keyCode = PApplet.RIGHT;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getxDir()).isEqualTo(0);
+    }
+
+    @Test
+    public void yDirNegativeUpStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().up();
+
+        na.keyCode = PApplet.UP;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getyDir()).isEqualTo(0);
+    }
+
+    @Test
+    public void yDirPositiveUpStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().down();
+
+        na.keyCode = PApplet.UP;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getyDir()).isEqualTo(1);
+    }
+
+    @Test
+    public void yDirNegativeDownStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().up();
+
+        na.keyCode = PApplet.DOWN;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getyDir()).isEqualTo(-1);
+    }
+
+    @Test
+    public void yDirPositiveDownStop() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().down();
+
+        na.keyCode = PApplet.DOWN;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getyDir()).isEqualTo(0);
+    }
+
+    @Test
+    public void yDirPositiveUknownKeyReleasedDoesNotStopPlayer() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+        na.gameSetup();
+        na.getCurrentLevel().getPlayer().down();
+
+        na.keyCode = 32;
+        na.keyReleased();
+        assertThat(na.getCurrentLevel().getPlayer().getyDir()).isEqualTo(1);
+    }
 
 }
