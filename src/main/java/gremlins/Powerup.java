@@ -64,4 +64,13 @@ public class Powerup extends Tile {
         spawnDelay = getRandomTimeInterval(15, 30) * App.FPS;
         canEffect = false;
     }
+
+    /**
+     * Setter for the canEffect boolean, used for testing purposes.
+     * @param b boolean variable [true, false].
+     */
+    public void setCanEffect(boolean b) {
+        this.canEffect = b;
+        this.spawnDelay = 0;
+    }
 }
