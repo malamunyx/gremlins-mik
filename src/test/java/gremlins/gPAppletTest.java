@@ -242,12 +242,26 @@ public class gPAppletTest {
         na.delay(200);
         na.getCurrentLevel().addSprite(Sprite.fireballFactory(100, 100, 'D', na.getCurrentLevel()));
         na.getCurrentLevel().addSprite(Sprite.slimeFactory(100, 100, 'D', na.getCurrentLevel()));
-        na.getCurrentLevel().addSprite(Sprite.iceballFactory(200, 200, 'D', na.getCurrentLevel()));
-        na.getCurrentLevel().addSprite(Sprite.gremlinFactory(200, 200, na.getCurrentLevel()));
         na.getCurrentLevel().getPlayer().SetPosition(60, 40);
         ((Powerup)na.getCurrentLevel().getTile(75)).setCanEffect(true);
         na.delay(300);
         assertThat(na.getCurrentLevel().getPlayer().getPlayerSpeed()).isEqualTo(4);
+    }
+
+    @Test
+    public void GremlinAndIceballInteraction() {
+        App na = new App();
+        na.configPath = "TestConfig/EmptyTestLevelConfig.json";
+
+        na.loop();
+        PApplet.runSketch(new String[]{"App"}, na);
+        na.setup();
+        na.delay(200);
+        Gremlin g = Sprite.gremlinFactory(200, 200, na.getCurrentLevel());
+        na.getCurrentLevel().addSprite(Sprite.iceballFactory(200, 200, 'D', na.getCurrentLevel()));
+        na.getCurrentLevel().addSprite(g);
+        na.delay(300);
+        assertThat(g.isFrozen()).isTrue();
     }
 
     @Test
