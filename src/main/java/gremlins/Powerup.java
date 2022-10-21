@@ -5,6 +5,13 @@ import processing.core.PImage;
 public class Powerup extends Tile {
     private int spawnDelay;
     private boolean canEffect;
+
+    /**
+     * Constructor method for Powerup class.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @return Instantiated Powerup object.
+     */
     public Powerup(int xPx, int yPx) {
         super(xPx, yPx);
         spawnDelay = App.FPS * getRandomTimeInterval(5, 10);

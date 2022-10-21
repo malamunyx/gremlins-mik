@@ -9,7 +9,12 @@ public class Wall extends Tile {
     private int timer = 16;
 
 
-
+    /**
+     * Constructor method for Wall class.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @return Instantiated Wall object.
+     */
     public Wall(int xPx, int yPx, boolean breakable) {
         super(xPx, yPx);
         this.breakable = breakable;

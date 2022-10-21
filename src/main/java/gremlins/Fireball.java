@@ -3,8 +3,16 @@ package gremlins;
 import processing.core.PImage;
 
 public class Fireball extends Projectile {
-    public Fireball(int xPx, int yPx, char dir, Level g) {
-        super(xPx, yPx, dir, g);
+    /**
+     * Fireball Constructor.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @param dir Direction character of the projectile [L, R, U, D].
+     * @param l Associated level object.
+     * @return Fireball object.
+     */
+    public Fireball(int xPx, int yPx, char dir, Level l) {
+        super(xPx, yPx, dir, l);
     }
 
     /**

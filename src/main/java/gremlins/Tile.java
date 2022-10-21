@@ -46,6 +46,12 @@ public abstract class Tile {
         return new Powerup(xPx, yPx);
     }
 
+    /**
+     * Constructor method for Tile class.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @return Instantiated Tile object.
+     */
     public Tile(int xPx, int yPx) {
         this.xPx = xPx;
         this.yPx = yPx;

@@ -13,6 +13,14 @@ public abstract class Projectile implements Sprite {
     protected char dir;
     protected boolean neutralised = false;
 
+    /**
+     * Projectile Constructor.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @param dir Direction character of the projectile [L, R, U, D].
+     * @param l Associated level object.
+     * @return Projectile object.
+     */
     public Projectile(int xPx, int yPx, char dir, Level l) {
         this.currentLevel = l;
         this.xPx = xPx;

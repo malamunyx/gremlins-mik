@@ -13,13 +13,20 @@ public class Player extends LiveEntity implements Sprite {
     private boolean powerupActive;
     private int powerupCooldown;
 
-    public Player(int xPx, int yPx, Level g) {
-        super(xPx, yPx, g);
+    /**
+     * Player Class constructor.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @param l Associated level object.
+     * @return Player object.
+     */
+    public Player(int xPx, int yPx, Level l) {
+        super(xPx, yPx, l);
         playerSpeed = speed;
         this.dir = 'L';
 
-        this.charge = g.wizardCooldown;
-        this.iceCharge = g.wizardCooldown;
+        this.charge = l.wizardCooldown;
+        this.iceCharge = l.wizardCooldown;
 
         powerupActive = false;
         powerupCooldown = App.FPS * App.POWERUPTIME;

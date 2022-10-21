@@ -16,10 +16,24 @@ public class Level {
     private HashMap<Integer, Tile> tileMap = new HashMap<>();
     private ArrayList<Sprite> sprites = new ArrayList<>();
 
+    /**
+     * Calls associated Level Class constructor and returns instantiated Level object.
+     * @param currentLevel File path to map text file.
+     * @param wizardCooldown Wizard shooting cooldown time in seconds.
+     * @param enemyCooldown Enemy shooting cooldown time in seconds.
+     * @return Instantiated Level object.
+     */
     public static Level generateLevel(File currentLevel, double wizardCooldown, double enemyCooldown) {
         return new Level(currentLevel, wizardCooldown, enemyCooldown);
     }
 
+    /**
+     * Level Class constructor.
+     * @param currentLevel File path to map text file.
+     * @param wizardCooldown Wizard shooting cooldown time in seconds.
+     * @param enemyCooldown Enemy shooting cooldown time in seconds.
+     * @return Level object.
+     */
     public Level(File currentLevel, double wizardCooldown, double enemyCooldown) {
         this.wizardCooldown = (int)Math.ceil(wizardCooldown * App.FPS);
         this.enemyCooldown = (int)(enemyCooldown * App.FPS);

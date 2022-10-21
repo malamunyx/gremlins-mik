@@ -12,8 +12,15 @@ public class Gremlin extends LiveEntity implements Sprite {
 
     private int freezeCountdown = App.FPS * App.FREEZETIME;
 
-    public Gremlin(int xPx, int yPx, Level g) {
-        super(xPx, yPx, g);
+    /**
+     * Gremlin Class constructor.
+     * @param xPx Integer pixel position on the x-axis.
+     * @param yPx Integer pixel position on the y-axis.
+     * @param l Associated level object.
+     * @return  Gremlin object.
+     */
+    public Gremlin(int xPx, int yPx, Level l) {
+        super(xPx, yPx, l);
         this.localSpeed = speed;
         this.dir = '\0';
     }
