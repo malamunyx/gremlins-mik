@@ -124,6 +124,12 @@ public class Gremlin extends LiveEntity implements Sprite {
      */
     @Override
     public void reset() {
+        /*
+            Unfreeze() is not in reset() as it can incentivise using
+            both iceball and fireball on one gremlin, effectively
+            'disabling' and relocating the gremlin for 10 seconds.
+         */
+
         int sIdx;
         do {
             sIdx = Level.rg.nextInt(33 * 36);
@@ -137,7 +143,7 @@ public class Gremlin extends LiveEntity implements Sprite {
         this.yVel = 0;
         this.xTarget = xPx;
         this.yTarget = yPx;
-        // unfreeze();
+
     }
 
     /**
@@ -152,7 +158,7 @@ public class Gremlin extends LiveEntity implements Sprite {
         this.yVel = 0;
         this.xTarget = xPx;
         this.yTarget = yPx;
-        unfreeze(); // FOR LEVELRESET, EXTENSION CASE
+        unfreeze();
     }
 
     /**
