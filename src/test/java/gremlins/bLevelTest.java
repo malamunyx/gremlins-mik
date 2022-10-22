@@ -191,7 +191,34 @@ public class bLevelTest {
         assertThatThrownBy(() -> {
             Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
         }).isInstanceOf(RuntimeException.class)
-                .hasMessage("Player not detected in level text file layout");
+                .hasMessage("Must have exactly one Player entry in level text file layout");
+    }
+
+    @Test
+    public void LoadInvalidTwoPlayersThrowsRuntimeException() {
+        String configPath = "TestLevels/InvalidTwoPlayers.txt";
+        assertThatThrownBy(() -> {
+            Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Must have exactly one Player entry in level text file layout");
+    }
+
+    @Test
+    public void LoadInvalidNoExitThrowsRuntimeException() {
+        String configPath = "TestLevels/InvalidNoExit.txt";
+        assertThatThrownBy(() -> {
+            Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Must have exactly one Exit in level text file layout");
+    }
+
+    @Test
+    public void LoadInvalidTwoExitsThrowsRuntimeException() {
+        String configPath = "TestLevels/InvalidTwoExits.txt";
+        assertThatThrownBy(() -> {
+            Level lt = Level.generateLevel(new File(configPath), wz_cd, en_cd);
+        }).isInstanceOf(RuntimeException.class)
+                .hasMessage("Must have exactly one Exit in level text file layout");
     }
 
     @Test
