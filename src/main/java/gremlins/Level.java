@@ -206,6 +206,8 @@ public class Level {
 
             int hashIdx = 0;
             int i = 0;
+            int playerCount = 0;
+            int exitCount = 0;
             while (sc.hasNextLine()) {
                 String s = sc.nextLine();
 
@@ -234,9 +236,11 @@ public class Level {
                         case 'W':
                             player = Sprite.playerFactory(j*20, i*20, this);
                             addSprite(player);
+                            ++playerCount;
                             break;
                         case 'E':
                             tileMap.put(hashIdx, Tile.exitTileFactory(j*20, i*20));
+                            ++exitCount;
                             break;
                         case 'P':
                             tileMap.put(hashIdx, Tile.powerupFactory(j * 20, i*20));
@@ -257,8 +261,11 @@ public class Level {
             if (i != 33) {
                 throw new RuntimeException("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not " + i);
             }
-            if (player == null) {
-                throw new RuntimeException("Player not detected in level text file layout");
+            if (playerCount != 1) {
+                throw new RuntimeException("Must have exactly one Player entry in level text file layout");
+            }
+            if (exitCount != 1) {
+                throw new RuntimeException("Must have exactly one Exit in level text file layout");
             }
 
             sc.close();
