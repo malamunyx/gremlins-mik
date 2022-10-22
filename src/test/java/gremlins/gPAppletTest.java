@@ -62,7 +62,7 @@ public class gPAppletTest {
         PApplet.runSketch(new String[]{"App"}, na);
         na.setup();
         na.delay(500);
-        na.getCurrentLevel().getPlayer().SetPosition(moveX, moveY);
+        na.getCurrentLevel().getPlayer().setPosition(moveX, moveY);
 
         na.delay(1000);
         assertThat(na.getLevel()).isEqualTo(na.getMaxLevel() + 1);
@@ -80,7 +80,7 @@ public class gPAppletTest {
         na.setup();
         na.delay(500);
 
-        na.getCurrentLevel().getPlayer().SetPosition(moveX, moveY);
+        na.getCurrentLevel().getPlayer().setPosition(moveX, moveY);
         assertThat(na.getCurrentLevel().playerWin()).isTrue();
 
         na.delay(500);
@@ -162,7 +162,7 @@ public class gPAppletTest {
         PApplet.runSketch(new String[]{"App"}, na);
         na.setup();
         na.delay(200);
-        na.getCurrentLevel().getPlayer().SetPosition(40, 180);
+        na.getCurrentLevel().getPlayer().setPosition(40, 180);
         na.keyCode = PApplet.UP;
         na.keyPressed();
         na.delay(100);
@@ -200,7 +200,7 @@ public class gPAppletTest {
         PApplet.runSketch(new String[]{"App"}, na);
         na.setup();
         na.delay(200);
-        na.getCurrentLevel().getPlayer().SetPosition(180, 40);
+        na.getCurrentLevel().getPlayer().setPosition(180, 40);
         na.keyCode = PApplet.LEFT;
         na.keyPressed();
         na.delay(100);
@@ -242,7 +242,7 @@ public class gPAppletTest {
         na.delay(200);
         na.getCurrentLevel().addSprite(Sprite.fireballFactory(100, 100, 'D', na.getCurrentLevel()));
         na.getCurrentLevel().addSprite(Sprite.slimeFactory(100, 100, 'D', na.getCurrentLevel()));
-        na.getCurrentLevel().getPlayer().SetPosition(60, 40);
+        na.getCurrentLevel().getPlayer().setPosition(60, 40);
         ((Powerup)na.getCurrentLevel().getTile(75)).setCanEffect(true);
         na.delay(300);
         assertThat(na.getCurrentLevel().getPlayer().getPlayerSpeed()).isEqualTo(4);

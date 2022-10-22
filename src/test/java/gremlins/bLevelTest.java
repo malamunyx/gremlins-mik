@@ -151,7 +151,7 @@ public class bLevelTest {
         Player p = lt.getPlayer();
         int moveX = (1147 % 36) * 20;
         int moveY = (1147 / 36) * 20;
-        p.SetPosition(moveX, moveY);
+        p.setPosition(moveX, moveY);
         // LOADED LEVEL 1, PLAYER IN OPPOSITE CORNER
         assertThat(p.getIndex(p.getCentreX(), p.getCentreY())).isEqualTo(1147);
         assertThat(lt.playerWin()).isTrue();
@@ -254,7 +254,7 @@ public class bLevelTest {
         Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
         Powerup p = (Powerup)lt.getTile(75);
         p.setCanEffect(true);
-        lt.getPlayer().SetPosition(60, 40);
+        lt.getPlayer().setPosition(60, 40);
         assertThat(lt.playerReceivePowerup()).isTrue();
     }
 
@@ -262,7 +262,7 @@ public class bLevelTest {
     public void playerReceivePowerupReturnsFalseWhenTileCannotEffect() {
         Level lt = Level.generateLevel(new File("TestLevels/Empty.txt"), wz_cd, en_cd);
         Powerup p = (Powerup)lt.getTile(75);
-        lt.getPlayer().SetPosition(60, 40);
+        lt.getPlayer().setPosition(60, 40);
         assertThat(lt.playerReceivePowerup()).isFalse();
     }
 
@@ -273,7 +273,7 @@ public class bLevelTest {
         p.setCanEffect(true);
         lt.getPlayer().setPowerupActive(true);
 
-        lt.getPlayer().SetPosition(60, 40);
+        lt.getPlayer().setPosition(60, 40);
         assertThat(lt.playerReceivePowerup()).isFalse();
     }
 
@@ -294,7 +294,7 @@ public class bLevelTest {
 
         pu.setCanEffect(true);
 
-        p.SetPosition(60, 40);
+        p.setPosition(60, 40);
         assertThat(lt.playerReceivePowerup()).isTrue();
 
         lt.updatePowerup();

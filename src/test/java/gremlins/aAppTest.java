@@ -55,14 +55,14 @@ public class aAppTest {
     public void LoadCurrentPlayerLevelOne() {
         App app = new App();
         Level l1 = app.loadLevel(1);
-        assertThat(app.LoadCurrentPlayer(l1)).isNotNull().isInstanceOf(Player.class);
+        assertThat(app.loadCurrentPlayer(l1)).isNotNull().isInstanceOf(Player.class);
     }
 
     @Test
     public void LoadCurrentPlayerNullLevelThrowsNullPtrException() {
         assertThatThrownBy(() -> {
             App app = new App();
-            app.LoadCurrentPlayer(null);
+            app.loadCurrentPlayer(null);
         }).isInstanceOf(NullPointerException.class).hasMessage("Level cannot be null for Player retrieval");
     }
 

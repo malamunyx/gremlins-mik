@@ -6,7 +6,6 @@ import processing.data.JSONObject;
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.*;
-import static processing.core.PApplet.loadJSONObject;
 
 public class cPlayerTest {
     App a = new App();
@@ -71,7 +70,7 @@ public class cPlayerTest {
     @Test
     public void testPlayerMoveUp() {
         Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
-        l.getPlayer().SetPosition(20,40);
+        l.getPlayer().setPosition(20,40);
         l.getPlayer().up();
         assertThat(l.getPlayer().getxDir()).isEqualTo(0);
         assertThat(l.getPlayer().getyDir()).isEqualTo(-1);
@@ -81,7 +80,7 @@ public class cPlayerTest {
     @Test
     public void testPlayerMoveDown() {
         Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
-        l.getPlayer().SetPosition(60,20);
+        l.getPlayer().setPosition(60,20);
         l.getPlayer().down();
         assertThat(l.getPlayer().getxDir()).isEqualTo(0);
         assertThat(l.getPlayer().getyDir()).isEqualTo(1);
@@ -91,7 +90,7 @@ public class cPlayerTest {
     @Test
     public void testPlayerMoveLeftObstruction() {
         Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
-        l.getPlayer().SetPosition(20,20);
+        l.getPlayer().setPosition(20,20);
         l.getPlayer().left();
         assertThat(l.getPlayer().getxDir()).isEqualTo(0);
         assertThat(l.getPlayer().getyDir()).isEqualTo(0);
@@ -101,7 +100,7 @@ public class cPlayerTest {
     @Test
     public void testPlayerMoveRightObstruction() {
         Level l = Level.generateLevel(new File(fname), wz_cd, en_cd);
-        l.getPlayer().SetPosition(60,20);
+        l.getPlayer().setPosition(60,20);
         l.getPlayer().right();
         assertThat(l.getPlayer().getxDir()).isEqualTo(0);
         assertThat(l.getPlayer().getyDir()).isEqualTo(0);
