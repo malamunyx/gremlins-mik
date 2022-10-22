@@ -14,7 +14,6 @@ public class App extends PApplet {
     public static final int WIDTH = 720;
     public static final int HEIGHT = 720;
     public static final int SPRITESIZE = 20;
-    public static final int BOTTOMBAR = 60;
     public static final int POWERUPTIME = 10;
     public static final int FREEZETIME = 10;
 
