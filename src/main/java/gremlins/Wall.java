@@ -56,8 +56,9 @@ public class Wall extends Tile {
      * Sets the wall broken status to true.
      */
     public void breakWall() {
-        if (breakable)
+        if (breakable) {
             broken = true;
+        }
     }
 
     /**

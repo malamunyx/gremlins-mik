@@ -34,11 +34,14 @@ public class Gremlin extends LiveEntity {
     public void update(App a, PImage img) {
         a.image(img, xPx, yPx);
 
-        if (!stopped && !canMove(getIndex(xPx, yPx) + getDirNum()))
+        if (!stopped && !canMove(getIndex(xPx, yPx) + getDirNum())) {
             stopped = true;
+        }
 
-        if (frozen)
+        if (frozen) {
             --freezeCountdown;
+        }
+
         if (freezeCountdown == 0) {
             freezeCountdown = App.FPS * App.FREEZETIME;
             unfreeze();
@@ -96,16 +99,17 @@ public class Gremlin extends LiveEntity {
      */
     @Override
     public int getDirNum() {
-        if (dir == 'L')
+        if (dir == 'L') {
             return -1;
-        else if (dir == 'R')
+        } else if (dir == 'R') {
             return 1;
-        else if (dir == 'U')
+        } else if (dir == 'U') {
             return -36;
-        else if (dir == 'D')
+        } else if (dir == 'D') {
             return 36;
-        else
+        } else {
             return 0;
+        }
     }
 
     /**
@@ -202,7 +206,7 @@ public class Gremlin extends LiveEntity {
      * Checks for unbroken walls around current tile location in search for valid location.
      * @return Random direction char ['U', 'D', 'L', 'R']
      */
-    public Character getRandomDir() {
+    public char getRandomDir() {
         ArrayList<Character> choices = new ArrayList<>();
         if (currentLevel.canWalk(getIndex(xPx, yPx) - 1))
             choices.add('L');

@@ -59,10 +59,11 @@ public class Level {
     public void updateMap(App a) {
         for (Tile t : tileMap.values()) {
             if (t instanceof Wall) {
-                if (((Wall) t).canBreak() && ((Wall) t).getStatus() != 5)
+                if (((Wall) t).canBreak() && ((Wall) t).getStatus() != 5) {
                     t.draw(a, a.brickwall[((Wall) t).getStatus()]);
-                else if (!((Wall) t).canBreak())
+                } else if (!((Wall) t).canBreak()) {
                     t.draw(a, a.stonewall);
+                }
             } else if (t instanceof Exit) {
                 t.draw(a, a.door);
             } else if (t instanceof Powerup) {
@@ -86,10 +87,11 @@ public class Level {
      * @return Boolean value representing tile accessibility.
      */
     public boolean canWalk(int idx) {
-        if (tileMap.containsKey(idx) && getTile(idx) instanceof Wall)
+        if (tileMap.containsKey(idx) && getTile(idx) instanceof Wall) {
             return (((Wall) getTile(idx)).isBroken());
-        else
+        } else {
             return true;
+        }
     }
 
     /**
@@ -105,8 +107,9 @@ public class Level {
      * @param s Objects that implement Sprite interface.
      */
     public void addSprite(Sprite s) {
-        if (s != null)
+        if (s != null) {
             sprites.add(s);
+        }
     }
 
     /**
@@ -120,14 +123,14 @@ public class Level {
 
             if (s1 instanceof Gremlin) {
                 s1.update(a, a.gremlin);
-                if (a.frameCount % (enemyCooldown) == 0 && !((Gremlin)s1).isFrozen())
+                if (a.frameCount % (enemyCooldown) == 0 && !((Gremlin)s1).isFrozen()) {
                     ((Gremlin) s1).fire();
-            }
-            else if (s1 instanceof Player)
+                }
+            } else if (s1 instanceof Player) {
                 s1.update(a, a.wizard[player.getDirNum()]);
-            else if (s1 instanceof Fireball)
+            } else if (s1 instanceof Fireball) {
                 s1.update(a, a.fireball);
-            else if (s1 instanceof Slime) {
+            } else if (s1 instanceof Slime) {
                 s1.update(a, a.slime);
             } else if (s1 instanceof Iceball) {
                 s1.update(a, a.iceball);
@@ -163,8 +166,9 @@ public class Level {
         for (int i = sprites.size()-1; i >= 0; --i) {
             Sprite s1 = sprites.get(i);
             if (s1 instanceof Projectile) {
-                if (((Projectile) s1).isNeutralised())
+                if (((Projectile) s1).isNeutralised()) {
                     sprites.remove(i);
+                }
             }
         }
     }
@@ -211,11 +215,13 @@ public class Level {
                 for (int j = 0; j < s.length(); ++j) {
 
                     if (i == 0 || (!sc.hasNextLine())) {
-                        if (s.charAt(j) != 'X')
+                        if (s.charAt(j) != 'X') {
                             throw new RuntimeException("Map must be bordered by stonewall");
+                        }
                     } else if (j == 0 || j == 35) {
-                        if (s.charAt(j) != 'X')
+                        if (s.charAt(j) != 'X') {
                             throw new RuntimeException("Map must be bordered by stonewall");
+                        }
                     }
 
                     switch (s.charAt(j)) {
@@ -248,11 +254,12 @@ public class Level {
                 ++i;
             }
 
-            if (i != 33)
+            if (i != 33) {
                 throw new RuntimeException("Map Specification violation: vertical Dimensions of map must be 33 Tiles, not " + i);
-
-            if (player == null)
+            }
+            if (player == null) {
                 throw new RuntimeException("Player not detected in level text file layout");
+            }
 
             sc.close();
         } catch (FileNotFoundException e) {

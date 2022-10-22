@@ -48,24 +48,28 @@ public class Player extends LiveEntity {
         a.image(a.icemana, 550, 681);
 
         // Fireball cooldown bar
-        if (charge == currentLevel.wizardCooldown)
+        if (charge == currentLevel.wizardCooldown) {
             a.fill(0, 255, 0);
-        else
+        } else {
             a.fill(47);
+        }
         a.rect(570, 669, ((float)charge / currentLevel.wizardCooldown)*130, 8);
 
         // Iceball cooldown bar
-        if (iceCharge == currentLevel.wizardCooldown)
+        if (iceCharge == currentLevel.wizardCooldown) {
             a.fill(0, 255, 0);
-        else
+        } else {
             a.fill(47);
+        }
         a.rect(570, 685, ((float)iceCharge / currentLevel.wizardCooldown)*130, 8);
 
         // RECHARGE COOLDOWN
-        if (charge < currentLevel.wizardCooldown)
+        if (charge < currentLevel.wizardCooldown) {
             ++charge;
-        if (iceCharge < currentLevel.wizardCooldown)
+        }
+        if (iceCharge < currentLevel.wizardCooldown) {
             ++iceCharge;
+        }
 
         // POWERUP COOLDOWN
         if (powerupActive) {
@@ -79,14 +83,18 @@ public class Player extends LiveEntity {
         }
 
         // Wall collisions
-        if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1))
+        if (xVel < 0 && !canMove(getIndex(xPx, yPx) - 1)) {
             leftStop();
-        if (xVel > 0 && !canMove(getIndex(xPx, yPx) + 1))
+        }
+        if (xVel > 0 && !canMove(getIndex(xPx, yPx) + 1)) {
             rightStop();
-        if (yVel < 0 && !canMove(getIndex(xPx, yPx) - 36))
+        }
+        if (yVel < 0 && !canMove(getIndex(xPx, yPx) - 36)) {
             upStop();
-        if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36))
+        }
+        if (yVel > 0 && !canMove(getIndex(xPx, yPx) + 36)) {
             downStop();
+        }
 
         if (xPx == xTarget && yPx == yTarget) {
             // Stop on square
