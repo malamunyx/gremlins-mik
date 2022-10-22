@@ -121,13 +121,13 @@ public class App extends PApplet {
 
         if (keyCode == UP) {
             currentPlayer.up();
-		} else if (keyCode == DOWN) {
-            currentPlayer.down();
-		} else if (keyCode == LEFT) {
-            currentPlayer.left();
-		} else if (keyCode == RIGHT) {
-            currentPlayer.right();
-		}
+        } else if (keyCode == DOWN) {
+                currentPlayer.down();
+        } else if (keyCode == LEFT) {
+                currentPlayer.left();
+        } else if (keyCode == RIGHT) {
+                currentPlayer.right();
+        }
 		
         if (keyCode == 32) {
             currentPlayer.fire();
@@ -144,13 +144,13 @@ public class App extends PApplet {
     public void keyReleased() {
         if (keyCode == UP) {
             currentPlayer.upStop();
-		} else if (keyCode == DOWN) {
-            currentPlayer.downStop();
-		} else if (keyCode == LEFT) {
-            currentPlayer.leftStop();
-		} else if (keyCode == RIGHT) {
-            currentPlayer.rightStop();
-		}
+        } else if (keyCode == DOWN) {
+                currentPlayer.downStop();
+        } else if (keyCode == LEFT) {
+                currentPlayer.leftStop();
+        } else if (keyCode == RIGHT) {
+                currentPlayer.rightStop();
+        }
     }
 
 
@@ -222,7 +222,7 @@ public class App extends PApplet {
 
         if (level >= levels.size() || level < 0) {
             throw new IndexOutOfBoundsException("Level number is beyond level range");
-		}
+	    }
 
         File currentLevel = new File(levels.getJSONObject(level).getString("layout"));
         double wizardCooldown = levels.getJSONObject(level).getDouble("wizard_cooldown");
@@ -257,7 +257,7 @@ public class App extends PApplet {
     public int loadLives(File f) throws NullPointerException {
         if (f == null) {
             throw new NullPointerException("Config file parameter is null");
-		}
+	    }
 
         JSONObject conf = loadJSONObject(new File(this.configPath));
         return conf.getInt("lives");
