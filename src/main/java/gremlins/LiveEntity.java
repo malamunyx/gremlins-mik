@@ -1,6 +1,6 @@
 package gremlins;
 
-public abstract class LiveEntity {
+public abstract class LiveEntity implements Sprite {
     protected Level currentLevel;
     protected int xPx;
     protected int yPx;

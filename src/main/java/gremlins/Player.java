@@ -2,7 +2,7 @@ package gremlins;
 
 import processing.core.PImage;
 
-public class Player extends LiveEntity implements Sprite {
+public class Player extends LiveEntity {
     private static final int SPEED = 2;
     private int playerSpeed;
     private int charge;

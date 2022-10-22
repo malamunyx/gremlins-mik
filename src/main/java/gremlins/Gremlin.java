@@ -4,7 +4,7 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-public class Gremlin extends LiveEntity implements Sprite {
+public class Gremlin extends LiveEntity {
     private static final int SPEED = 1;
     private int localSpeed;
     private boolean stopped = true;
