@@ -74,7 +74,7 @@ public abstract class Projectile implements Sprite {
      */
     @Override
     public int getCentreX() {
-        return this.xPx + Sprite.Offset;
+        return this.xPx + Sprite.OFFSET;
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class Projectile implements Sprite {
      */
     @Override
     public int getCentreY() {
-        return this.yPx + Sprite.Offset;
+        return this.yPx + Sprite.OFFSET;
     }
 
 
@@ -111,7 +111,7 @@ public abstract class Projectile implements Sprite {
      * @return If wall exists, returns true if and only if Wall is broken, else return false.
      */
     public boolean checkWallCollision() {
-        return !currentLevel.canWalk(getIndex(xPx + Offset, yPx + Offset));
+        return !currentLevel.canWalk(getIndex(xPx + OFFSET, yPx + OFFSET));
     }
 
     /**

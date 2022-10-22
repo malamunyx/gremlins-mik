@@ -7,7 +7,7 @@ public interface Sprite {
      * Sprite positionality is determined in the top left corner.
      * To determine centre, we add offset to the respective x and y pixel locations.
      */
-    int Offset = 9;
+    int OFFSET = 9;
 
     /**
      * Factory method that calls derived Player Class constructor to produce a Player object.
