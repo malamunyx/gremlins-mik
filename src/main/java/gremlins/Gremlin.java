@@ -5,7 +5,7 @@ import processing.core.PImage;
 import java.util.ArrayList;
 
 public class Gremlin extends LiveEntity implements Sprite {
-    private static final int speed = 1;
+    private static final int SPEED = 1;
     private int localSpeed;
     private boolean stopped = true;
     private boolean frozen = false;
@@ -21,7 +21,7 @@ public class Gremlin extends LiveEntity implements Sprite {
      */
     public Gremlin(int xPx, int yPx, Level l) {
         super(xPx, yPx, l);
-        this.localSpeed = speed;
+        this.localSpeed = SPEED;
         this.dir = '\0';
     }
 
@@ -125,9 +125,9 @@ public class Gremlin extends LiveEntity implements Sprite {
     @Override
     public void reset() {
         /*
-            Unfreeze() is not in reset() as it can incentivise using
-            both iceball and fireball on one gremlin, effectively
-            'disabling' and relocating the gremlin for 10 seconds.
+         * Unfreeze() is not in reset() as it can incentivise using
+         * both iceball and fireball on one gremlin, effectively
+         * disabling and relocating the gremlin for 10 seconds.
          */
 
         int sIdx;
@@ -243,7 +243,7 @@ public class Gremlin extends LiveEntity implements Sprite {
      * localSpeed becomes intended speed and frozen boolean becomes false.
      */
     public void unfreeze() {
-        localSpeed = speed;
+        localSpeed = SPEED;
         frozen = false;
     }
 

@@ -107,7 +107,7 @@ public class App extends PApplet {
         maxLevel = LoadMaxLevel(config);
         lives = loadLives(config);
         currentLevel = loadLevel(level);
-        currentPlayer = LoadCurrentPlayer(currentLevel);
+        currentPlayer = loadCurrentPlayer(currentLevel);
     }
 
     /**
@@ -237,7 +237,7 @@ public class App extends PApplet {
      * @param currentLevel the current (level) Game class that is loaded.
      * @return Player object of the associated level Game class that is loaded by the level text file.
      */
-    public Player LoadCurrentPlayer(Level currentLevel) {
+    public Player loadCurrentPlayer(Level currentLevel) {
         if (currentLevel == null) {
             throw new NullPointerException("Level cannot be null for Player retrieval");
         }
@@ -336,7 +336,7 @@ public class App extends PApplet {
 
         this.level = level;
         this.currentLevel = loadLevel(level);
-        this.currentPlayer = LoadCurrentPlayer(currentLevel);
+        this.currentPlayer = loadCurrentPlayer(currentLevel);
     }
 
     public static void main(String[] args) {

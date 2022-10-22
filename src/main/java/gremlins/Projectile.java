@@ -4,7 +4,7 @@ import processing.core.PImage;
 
 public abstract class Projectile implements Sprite {
     protected Level currentLevel;
-    protected static final int speed = 4;
+    protected static final int SPEED = 4;
 
     protected int xPx;
     protected int yPx;
@@ -122,16 +122,16 @@ public abstract class Projectile implements Sprite {
     private void setVelocity(char dir) throws IllegalArgumentException {
         switch (dir) {
             case 'L':
-                xVel = -speed;
+                xVel = -SPEED;
                 break;
             case 'R':
-                xVel = speed;
+                xVel = SPEED;
                 break;
             case 'U':
-                yVel = -speed;
+                yVel = -SPEED;
                 break;
             case 'D':
-                yVel = speed;
+                yVel = SPEED;
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Invalid char %c for projectile direction", dir));

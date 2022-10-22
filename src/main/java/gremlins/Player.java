@@ -3,7 +3,7 @@ package gremlins;
 import processing.core.PImage;
 
 public class Player extends LiveEntity implements Sprite {
-    private static final int speed = 2;
+    private static final int SPEED = 2;
     private int playerSpeed;
     private int charge;
     private int iceCharge;
@@ -22,7 +22,7 @@ public class Player extends LiveEntity implements Sprite {
      */
     public Player(int xPx, int yPx, Level l) {
         super(xPx, yPx, l);
-        playerSpeed = speed;
+        playerSpeed = SPEED;
         this.dir = 'L';
 
         this.charge = l.wizardCooldown;
@@ -250,8 +250,8 @@ public class Player extends LiveEntity implements Sprite {
      */
     @Override
     public void reset() {
-        SetPosition(xOrigin, yOrigin);
-        playerSpeed = speed;
+        setPosition(xOrigin, yOrigin);
+        playerSpeed = SPEED;
         xDir = 0;
         yDir = 0;
         endSpeedPowerup();
@@ -281,7 +281,7 @@ public class Player extends LiveEntity implements Sprite {
      * @param xPx x pixel position.
      * @param yPx y pixel position.
      */
-    public void SetPosition(int xPx, int yPx) {
+    public void setPosition(int xPx, int yPx) {
         this.xPx = xPx;
         this.yPx = yPx;
         this.xTarget = xPx;
@@ -309,7 +309,7 @@ public class Player extends LiveEntity implements Sprite {
      */
     public void endSpeedPowerup() {
         setPowerupActive(false);
-        setSpeed(speed);
+        setSpeed(SPEED);
         powerupCooldown = App.FPS * App.POWERUPTIME;
     }
 
