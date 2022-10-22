@@ -120,15 +120,16 @@ public class App extends PApplet {
             loop();
         }
 
-        if (keyCode == UP)
+        if (keyCode == UP) {
             currentPlayer.up();
-        else if (keyCode == DOWN)
+		} else if (keyCode == DOWN) {
             currentPlayer.down();
-        else if (keyCode == LEFT)
+		} else if (keyCode == LEFT) {
             currentPlayer.left();
-        else if (keyCode == RIGHT)
+		} else if (keyCode == RIGHT) {
             currentPlayer.right();
-
+		}
+		
         if (keyCode == 32) {
             currentPlayer.fire();
         } else if (keyCode == 87) {
@@ -142,14 +143,15 @@ public class App extends PApplet {
      */
     @Override
     public void keyReleased(){
-        if (keyCode == UP)
+        if (keyCode == UP) {
             currentPlayer.upStop();
-        else if (keyCode == DOWN)
+		} else if (keyCode == DOWN) {
             currentPlayer.downStop();
-        else if (keyCode == LEFT)
+		} else if (keyCode == LEFT) {
             currentPlayer.leftStop();
-        else if (keyCode == RIGHT)
+		} else if (keyCode == RIGHT) {
             currentPlayer.rightStop();
+		}
     }
 
 
@@ -165,13 +167,10 @@ public class App extends PApplet {
         if (level > maxLevel) { // Condition for Game win
             endGameScreen("YOU WIN", 0, 255, 0);
             noLoop();
-
-        }
-        else if (lives <= 0){ // Condition for Game lost.
+        } else if (lives <= 0){ // Condition for Game lost.
             endGameScreen("YOU LOSE", 255, 0, 0);
             noLoop();
-        }
-        else { // Normal conditions
+        } else { // Normal conditions
             currentLevel.draw(this);
 
             fill(0);
@@ -222,8 +221,9 @@ public class App extends PApplet {
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
 
-        if (level >= levels.size() || level < 0)
+        if (level >= levels.size() || level < 0) {
             throw new IndexOutOfBoundsException("Level number is beyond level range");
+		}
 
         File currentLevel = new File(levels.getJSONObject(level).getString("layout"));
         double wizardCooldown = levels.getJSONObject(level).getDouble("wizard_cooldown");
@@ -256,8 +256,9 @@ public class App extends PApplet {
      * @throws NullPointerException Indication that config File object reference is null.
      */
     public int loadLives(File f) throws NullPointerException {
-        if (f == null)
+        if (f == null) {
             throw new NullPointerException("Config file parameter is null");
+		}
 
         JSONObject conf = loadJSONObject(new File(this.configPath));
         return conf.getInt("lives");
@@ -270,8 +271,9 @@ public class App extends PApplet {
      * @throws NullPointerException Indication that config File object reference is null.
      */
     public int LoadMaxLevel(File f) throws NullPointerException {
-        if (f == null)
+        if (f == null) {
             throw new NullPointerException("Config file parameter is null");
+		}
 
         JSONObject conf = loadJSONObject(new File(this.configPath));
         JSONArray levels = conf.getJSONArray("levels");
@@ -289,6 +291,7 @@ public class App extends PApplet {
         if (filename == null) {
             throw new NullPointerException("Null parameter is invalid");
         }
+		
         try {
             return loadImage(URLDecoder.decode(this.getClass().getResource(filename).getPath(), StandardCharsets.UTF_8.toString()));
         } catch (UnsupportedEncodingException | NullPointerException e) {
@@ -331,8 +334,9 @@ public class App extends PApplet {
      * @param level Level number.
      */
     public void setGameLevel(int level) {
-        if (level > this.getMaxLevel() || level <= 0)
+        if (level > this.getMaxLevel() || level <= 0) {
             throw new IndexOutOfBoundsException("Level parameter out of bounds");
+		}
 
         this.level = level;
         this.currentLevel = loadLevel(level);
