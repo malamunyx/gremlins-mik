@@ -113,7 +113,7 @@ public class App extends PApplet {
      * Receive key pressed signal from the keyboard.
      */
     @Override
-    public void keyPressed(){
+    public void keyPressed() {
         if (!looping) { // restart game.
             gameSetup();
             loop();
@@ -141,7 +141,7 @@ public class App extends PApplet {
      * Receive key released signal from the keyboard.
      */
     @Override
-    public void keyReleased(){
+    public void keyReleased() {
         if (keyCode == UP) {
             currentPlayer.upStop();
 		} else if (keyCode == DOWN) {
