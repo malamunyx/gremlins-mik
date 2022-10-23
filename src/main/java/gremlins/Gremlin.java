@@ -53,7 +53,9 @@ public class Gremlin extends LiveEntity {
 
             if (stopped) {
                 dir = getRandomDir();
-                stopped = !stopped;
+				if (dir != '\0') {
+                	stopped = false; 
+				} 
             }
 
             if (dir == 'U') {

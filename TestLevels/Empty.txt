@@ -26,8 +26,8 @@ X                                  X
 X                                  X
 X                                  X
 X                                  X
-X                                  X
-X                                  X
-X                                  X
+XBB                                X
+XGB                                X
+XBB                                X
 XE                                 X
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
