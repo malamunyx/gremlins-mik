@@ -278,6 +278,4 @@ public class gPAppletTest {
         na.delay(700);
         assertThat(((Wall)na.getCurrentLevel().getTile(40)).isBroken()).isTrue();
     }
-
-
 }
