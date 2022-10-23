@@ -169,7 +169,15 @@ public class Gremlin extends LiveEntity {
      */
     @Override
     public void fire() {
-        currentLevel.addSprite(Sprite.slimeFactory(xPx, yPx, dir, currentLevel));
+        /*
+         * In getDir, there is no other possible direction characters apart from
+         * [U, D, L, R, \0]. Only invalid one is the null character, hence
+         * we only check for it as Projectiles throw illegal state exception for
+         * invalid directions.
+         */
+        if (dir != '\0') {
+            currentLevel.addSprite(Sprite.slimeFactory(xPx, yPx, dir, currentLevel));
+        }
     }
 
     /**

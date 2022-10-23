@@ -166,6 +166,18 @@ public class eGremlinTest {
         assertThat(g.spriteCollision(f)).isFalse();
     }
 
-
-
+    /* Firing Testing */
+    @Test
+    public void GremlinFireNoDireciton() {
+        Level l = Level.generateLevel(new File("TestLevels/GremlinBoxedIn.txt"), 3, 3);
+        Gremlin g = Sprite.gremlinFactory(180,60, l);
+        g.fire();
+        int slimeNum = 0;
+        for (Sprite s : l.getSprites()) {
+            if (s instanceof Slime) {
+                ++slimeNum;
+            }
+        }
+        assertThat(slimeNum).isEqualTo(0);
+    }
 }
