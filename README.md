@@ -3,7 +3,6 @@
 - Utilises Java Processing Library for graphical processing
 - Gradle implementation as dependency manager
 
----
 ## Game Setup and Configuration
 ### Powerups
 
@@ -29,7 +28,6 @@ level hierarchies in the ``"Levels"`` JSON array, and both the
 player and enemy firing cooldown in the ``"wizard_cooldown"`` 
 and ``"enemy_cooldown"`` keys respectively.
 
----
 ## Utilisation
   - JSON Processing
   - Object-Oriented Design
