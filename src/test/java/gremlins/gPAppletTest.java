@@ -105,7 +105,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -122,7 +121,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -139,7 +137,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -156,7 +153,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     /* Firing Fireball */
@@ -177,7 +173,6 @@ public class gPAppletTest {
         na.getCurrentLevel().getPlayer().fire();
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -197,7 +192,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -218,7 +212,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     @Test
@@ -238,7 +231,6 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
-        na.noLoop();
     }
 
     /* Powerup integration sketch testing */
@@ -257,7 +249,6 @@ public class gPAppletTest {
         ((Powerup)na.getCurrentLevel().getTile(75)).setCanEffect(true);
         na.delay(300);
         assertThat(na.getCurrentLevel().getPlayer().getPlayerSpeed()).isEqualTo(4);
-        na.noLoop();
     }
 
     @Test
@@ -274,7 +265,6 @@ public class gPAppletTest {
         na.getCurrentLevel().addSprite(g);
         na.delay(300);
         assertThat(g.isFrozen()).isTrue();
-        na.noLoop();
     }
 
     @Test

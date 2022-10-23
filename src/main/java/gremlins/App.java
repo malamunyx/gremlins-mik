@@ -93,7 +93,7 @@ public class App extends PApplet {
 
         // Always start at first level, hence first index of JSONArray.
         gameSetup();
-        gameEndPeriod = App.FPS / 2;
+		resetGameEndPeriod();
     }
 
     /**
