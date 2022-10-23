@@ -73,7 +73,7 @@ public class Player extends LiveEntity {
 
         // POWERUP COOLDOWN
         if (powerupActive) {
-            a.image(a.feather, 550, 697);
+            a.image(a.feather, 550, 699);
             a.fill(0, 0, 255);
             a.rect(570, 701,  ((float)powerupCooldown / (App.FPS * App.POWERUPTIME))*130, 8);
             --powerupCooldown;
