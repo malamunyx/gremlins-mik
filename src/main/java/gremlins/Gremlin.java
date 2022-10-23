@@ -129,9 +129,8 @@ public class Gremlin extends LiveEntity {
     @Override
     public void reset() {
         /*
-         * Unfreeze() is not in reset() as it can incentivise using
-         * both iceball and fireball on one gremlin, effectively
-         * disabling and relocating the gremlin for 10 seconds.
+         * Unfreeze() is in reset() as it can incentivise players
+         * to not spam fireballs with Iceball projectiles.
          */
 
         int sIdx;
@@ -147,7 +146,7 @@ public class Gremlin extends LiveEntity {
         this.yVel = 0;
         this.xTarget = xPx;
         this.yTarget = yPx;
-
+        unfreeze();
     }
 
     /**
