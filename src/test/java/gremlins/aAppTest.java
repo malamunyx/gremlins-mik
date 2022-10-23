@@ -242,18 +242,6 @@ public class aAppTest {
         assertThat(na.getCurrentLevel()).isNotNull();
     }
 
-    @Test
-    public void KeyPressedUnknownKeyNotLooping() {
-        App na = new App();
-        na.gameSetup();
-        na.setGameLevel(2);
-        na.noLoop();
-        na.keyCode = 0;
-        na.keyPressed();
-        assertThat(na.isLooping()).isTrue();
-        assertThat(na.getLevel()).isEqualTo(1);
-    }
-
     /* Direction stop and keyreleased testing */
     @Test
     public void xDirNegativeLeftStop() {

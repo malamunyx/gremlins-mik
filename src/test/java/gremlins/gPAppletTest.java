@@ -48,6 +48,7 @@ public class gPAppletTest {
         na.delay(1000);
 
         assertThat(na.getLives()).isEqualTo(0);
+        na.noLoop();
     }
 
     // Pretty unstable test...
@@ -66,6 +67,7 @@ public class gPAppletTest {
 
         na.delay(1000);
         assertThat(na.getLevel()).isEqualTo(na.getMaxLevel() + 1);
+        na.noLoop();
     }
 
     /* Level Up */
@@ -85,6 +87,7 @@ public class gPAppletTest {
 
         na.delay(500);
         assertThat(na.getLevel()).isEqualTo(2);
+        na.noLoop();
     }
 
     /* Firing Iceball */
@@ -102,6 +105,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -118,6 +122,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -134,6 +139,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -150,6 +156,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Iceball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     /* Firing Fireball */
@@ -170,6 +177,7 @@ public class gPAppletTest {
         na.getCurrentLevel().getPlayer().fire();
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -189,6 +197,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -209,6 +218,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     @Test
@@ -228,6 +238,7 @@ public class gPAppletTest {
         assertThat(na.getCurrentLevel().getSprites()).hasAtLeastOneElementOfType(Fireball.class);
 
         na.delay(300);
+        na.noLoop();
     }
 
     /* Powerup integration sketch testing */
@@ -246,6 +257,7 @@ public class gPAppletTest {
         ((Powerup)na.getCurrentLevel().getTile(75)).setCanEffect(true);
         na.delay(300);
         assertThat(na.getCurrentLevel().getPlayer().getPlayerSpeed()).isEqualTo(4);
+        na.noLoop();
     }
 
     @Test
@@ -262,6 +274,7 @@ public class gPAppletTest {
         na.getCurrentLevel().addSprite(g);
         na.delay(300);
         assertThat(g.isFrozen()).isTrue();
+        na.noLoop();
     }
 
     @Test

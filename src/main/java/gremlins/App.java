@@ -18,6 +18,7 @@ public class App extends PApplet {
     public static final int FREEZETIME = 10;
 
     public static final int FPS = 60;
+    public static final int ENDPERIOD = FPS / 2;
 
     public String configPath;
 
@@ -44,6 +45,7 @@ public class App extends PApplet {
     private int maxLevel;
     private Level currentLevel;
     private Player currentPlayer;
+    private int gameEndPeriod;
 
     public App() {
         this.configPath = "config.json";
@@ -91,6 +93,7 @@ public class App extends PApplet {
 
         // Always start at first level, hence first index of JSONArray.
         gameSetup();
+        gameEndPeriod = App.FPS / 2;
     }
 
     /**
@@ -114,9 +117,9 @@ public class App extends PApplet {
      */
     @Override
     public void keyPressed() {
-        if (!looping) { // restart game.
+        if (gameEndPeriod == 0) { // restart game.
             gameSetup();
-            loop();
+            resetGameEndPeriod();
         }
 
         if (keyCode == UP) {
@@ -165,10 +168,10 @@ public class App extends PApplet {
 
         if (level > maxLevel) { // Condition for Game win
             endGameScreen("YOU WIN", 0, 255, 0);
-            noLoop();
+            decrementGameEndPeriod();
         } else if (lives <= 0){ // Condition for Game lost.
             endGameScreen("YOU LOSE", 255, 0, 0);
-            noLoop();
+            decrementGameEndPeriod();
         } else { // Normal conditions
             currentLevel.draw(this);
 
@@ -340,6 +343,23 @@ public class App extends PApplet {
         this.level = level;
         this.currentLevel = loadLevel(level);
         this.currentPlayer = loadCurrentPlayer(currentLevel);
+    }
+
+    /**
+     * Decrements the gameEndTime to ensure that end game screens
+     * last 30 frames (500 ms).
+     */
+    public void decrementGameEndPeriod() {
+        if (gameEndPeriod > 0) {
+            --gameEndPeriod;
+        }
+    }
+
+    /**
+     * Resets gameEndPeriod variable to the static ENDPERIOD value.
+     */
+    public void resetGameEndPeriod() {
+        gameEndPeriod = App.ENDPERIOD;
     }
 
     public static void main(String[] args) {
