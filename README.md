@@ -3,6 +3,10 @@
 - Utilises Java Processing Library for graphical processing
 - Gradle implementation as dependency manager
 
+
+https://github.com/malamunyx/gremlins-mik/assets/68112724/75a08b86-f102-4eae-998b-34ca498eafa8
+
+
 ## Game Setup and Configuration
 ### Powerups
 
